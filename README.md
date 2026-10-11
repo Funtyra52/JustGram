@@ -1,56 +1,76 @@
-# 🍒 Cherrygram
+# ⭐ JustGram
 
-Cherrygram is a third-party Telegram client with not many but useful modifications.
+<p align="center">
+  <b>JustGram</b> — форк Telegram / Cherrygram 11.3.0 с мульти-системой бейджей, режимом призрака, движком плагинов и собственной системой поддержки.
+</p>
 
-This is an unofficial fork of the original [Telegram App for Android](https://github.com/DrKLO/Telegram).
+<p align="center">
+  <a href="https://github.com/Funtyra52/JustGram/releases"><img src="https://img.shields.io/badge/Release-v0.1.0--beta.1-blue.svg" alt="Release"></a>
+  <a href="https://github.com/Funtyra52/JustGram/actions"><img src="https://img.shields.io/badge/Build-GitHub_Actions-brightgreen.svg" alt="CI"></a>
+  <a href="https://github.com/Funtyra52/JustGram/blob/main/Supporters.txt"><img src="https://img.shields.io/badge/Supporters-Live_Sync-orange.svg" alt="Supporters"></a>
+</p>
 
-This repo contains the official source code for [Telegram App for Android](https://play.google.com/store/apps/details?id=org.telegram.messenger).
+---
 
-## Current Maintainers
+## ✨ Основные особенности JustGram
 
-- [arsLan4k1390](https://github.com/arsLan4k1390)
-- You? :)
+### 🌟 Мульти-система бейджей
+* Одновременное отображение бейджей **в один ряд**:
+  1. **JustGram Developer / Supporter** — официальные бейджи нашего клиента.
+  2. **CherryGram Supporter** — бейджи сообщества Cherrygram.
+  3. **exteraGram Supporter** — бейджи сообщества exteraGram.
+  4. **Telegram Premium** — эмодзи-статусы и звезда премиума.
+* Интерактивное окно с подробной информацией о каждом бейдже при нажатии на него в профиле или шапке диалога.
 
-## Contributors
+### 💰 Система спонсоров (Supporters)
+* Хочешь персональный бейдж JustGram? Закинь автору 100₽, и твой Telegram ID будет добавлен в файл [`Supporters.txt`](Supporters.txt).
+* Клиент на лету подгружает список с GitHub и рисует бейдж рядом с твоим ником у всех пользователей JustGram!
 
-- [arsLan4k1390](https://github.com/arsLan4k1390)
+### 👻 Режим призрака (Ghost Mode)
+* **Скрытие статуса «В сети»** (suppress `account.updateStatus`).
+* **Скрытие набора текста** (suppress `messages.setTyping`).
+* **Нечиталка сообщений** (просматривай сообщения без отправки статуса прочтения собеседнику).
+* **Нечиталка историй** (просматривай Stories инкогнито).
+* *Безопасность*: клиент гарантированно не сохраняет удалённые сообщения и не нарушает целостность переписок.
 
+### 🧩 Движок плагинов (Extera Engine)
+* Портированная модульная система плагинов из exteraGram.
+* **Safe Mode**: автоматический безопасный режим при сбое любого стороннего плагина для предотвращения bootloop.
+* Изоляция ошибок в try-catch и оптимизация рендеринга на главном потоке.
 
-## Discussion
+### ⚙️ Вкладка «Настройки JustGram»
+* Отдельный раздел настроек прямо в главном меню рядом с настройками Cherrygram.
+* Быстрый доступ к Призраку, Плагинам, списку спонсоров и статусу бейджей.
 
-Join the [Cherrygram official channel](https://t.me/cherrygram)
+---
 
-Join the [Cherrygram official group](https://t.me/CherrygramSupport)
+## 🛠️ Сборка APK
 
+### Автоматическая сборка (GitHub Actions)
+В репозитории настроен автоматический CI/CD workflow `.github/workflows/build.yml`.
+При каждом коммите или пуше тега готовый APK собирается на облачных серверах и выкладывается во вкладку **Actions -> Artifacts**.
 
-## API, Protocol documentation
+### Локальная сборка
+Требования: JDK 17, Android SDK 34/36, Android NDK r27b, CMake 3.22.1.
 
-Telegram API manuals: https://core.telegram.org/api
+```bash
+# Сборка Standalone APK (рекомендуется)
+./gradlew :TMessagesProj_AppStandalone:assembleAfatStandalone
 
-MTproto protocol manuals: https://core.telegram.org/mtproto
+# Сборка стандартного Release APK
+./gradlew :TMessagesProj_App:assembleAfatRelease
+```
 
+Готовый APK появится в:
+`TMessagesProj_AppStandalone/build/outputs/apk/afat/standalone/`
 
-## Compilation Guide
+---
 
-You will require Android Studio 2025.1.4, Android NDK 27.2.12479018 and Android SDK 36.
+## 👑 Автор и разработка
+* **Создатель & Lead Developer**: [Funtyra52](https://github.com/Funtyra52) (Telegram ID: `5142967559`)
+* **База клиента**: Cherrygram 11.3.0 & Telegram v12.10.6
 
-1. Clone the Cherrygram source code with its submodules:
-   ```bash
-   git clone --recursive --shallow-submodules https://github.com/arslan4k1390/Cherrygram.git Cherrygram
-   ```
-   In case you forgot the `--recursive` flag, change to the `Telegram` directory and run:
-   ```bash
-   git submodule init && git submodule update --init --recursive --depth=1
-   ```
-2. Switch to `main_Reproducible_Builds` branch and follow the instructions listed in `README.md`
-3. Fill out storeFile, storePassword, keyAlias, keyPassword in all module build.gradle files (TMessagesProj_App, TMessagesProj_AppHuawei, TMessagesProj_AppStandalone) to sign your app.
-4. Go to https://console.firebase.google.com/, create two android apps with application IDs uz.unnarsx.cherrygram and uz.unnarsx.cherrygram.beta, enable Firebase Messaging and download `google-services.json`, which should be copied into `TMessagesProj` folder.
-5. Open the project in the Studio (note that it should be opened, NOT imported).
-6. Fill out values in `TMessagesProj/src/main/java/uz/unnarsx/cherrygram/Extra.kt` – each variable contains a link explaining where to get the required data.
-7. You are ready to compile and use Cherrygram.
-
-
-## Thanks to:
-- [Catogram](https://github.com/Catogram/Catogram) and [Nekogram](https://gitlab.com/Nekogram/Nekogram)
-- [exteraGram](https://github.com/exteraSquad/exteraGram) and [OwlGram](https://github.com/OwlGramDev/OwlGram)
-- [Telegraher](https://github.com/nikitasius/Telegraher) and [Telegram Monet](https://github.com/c3r5b8/Telegram-Monet)
+## ❤️ Благодарности
+* [Cherrygram](https://github.com/arsLan4k1390/Cherrygram)
+* [exteraGram](https://github.com/exteraSquad/exteraGram)
+* [Telegram Android Open Source](https://github.com/DrKLO/Telegram)
