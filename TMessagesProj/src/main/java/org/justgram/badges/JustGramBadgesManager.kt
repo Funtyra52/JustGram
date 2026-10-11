@@ -118,9 +118,7 @@ object JustGramBadgesManager : CoroutineScope by CoroutineScope(SupervisorJob() 
             for (rawLine in lines) {
                 val cleanLine = rawLine.substringBefore("#").substringBefore("//").trim()
                 if (cleanLine.isEmpty()) continue
-                // Extract first numeric id from line
-                val match = Regex("""\b\d{5,15}\b""").find(cleanLine)
-                val id = match?.value?.toLongOrNull() ?: cleanLine.toLongOrNull()
+                val id = cleanLine.toLongOrNull() ?: Regex("""-?\d{5,16}""").find(cleanLine)?.value?.toLongOrNull()
                 if (id != null && id != 0L) {
                     justGramSupporters.add(id)
                 }
