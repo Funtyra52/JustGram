@@ -51,7 +51,7 @@ object FoldersHelper {
     ) {
         val background = iBlur3FactoryLiquidGlass.create(
             filterTabsView,
-            BlurredBackgroundProviderImpl.foldersPanel(resourceProvider)
+            BlurredBackgroundProviderImpl.topPanel(resourceProvider)
         )
         background.setRadius(dp(18f).toFloat())
         background.setPadding(dp(6.666f))
@@ -76,7 +76,7 @@ object FoldersHelper {
         val filterTabsView = dialogsActivity.filterTabsView ?: return
 
         var offset = dialogsActivity.navigationBarHeight
-        if (dialogsActivity.hasMainTabs || CherrygramAppearanceConfig.bottomTabsVisible()) {
+        if (dialogsActivity.hasMainTabs || CherrygramAppearanceConfig.showMainTabs) {
             offset += dp(DialogsActivity.MAIN_TABS_HEIGHT.toFloat()) + DialogsActivity.MAIN_TABS_MARGIN
         }
         filterTabsView.translationY = -offset.toFloat()
@@ -106,7 +106,7 @@ object FoldersHelper {
         )
 
         val mainTabsBottom = height - dialogsActivity.navigationBarHeight
-        val mainTabsTop = if (dialogsActivity.hasMainTabs || CherrygramAppearanceConfig.bottomTabsVisible()) {
+        val mainTabsTop = if (dialogsActivity.hasMainTabs || CherrygramAppearanceConfig.showMainTabs) {
             mainTabsBottom - dp(DialogsActivity.MAIN_TABS_HEIGHT.toFloat()) - DialogsActivity.MAIN_TABS_MARGIN
         } else {
             mainTabsBottom

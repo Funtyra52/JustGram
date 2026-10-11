@@ -24,16 +24,32 @@ import uz.unnarsx.cherrygram.helpers.UserHelper
 object Extra {
 
     fun getAppID(): Int {
-        return org.telegram.messenger.BuildConfig.TELEGRAM_API_ID
+        return 4
     }
 
     fun getAppHash(): String {
-        return org.telegram.messenger.BuildConfig.TELEGRAM_API_HASH
+        return "014b35b6184100b085b0d0572f9b5103"
     }
 
     const val SMS_HASH = ""
 
     val HASH_ARRAY = arrayOf("")
+    val APP_ARRAY = arrayOf("")
+    val SMS_ARRAY = arrayOf("")
+    val Name_ArrTwo1 = arrayOf("")
+    val Name_ArrTwo2 = arrayOf("")
+    val Name_ArrTwo3 = arrayOf("")
+    val Name_ArrTwo4 = arrayOf("")
+    val Name_ArrTwo5 = arrayOf("")
+    val Name_ArrTwo6 = arrayOf("")
+
+    val XName_Arr = arrayOf("non_existent_folder_check")
+    val XName_ArrTwo = arrayOf("non_existent_folder_check_two")
+    val Name_Arr = arrayOf("non_existent_file_check")
+    val Name_Arr2 = arrayOf("non_existent_file_check_2")
+    val Name_Arr3 = arrayOf("non_existent_file_check_3")
+    val Name_ArrTwo = arrayOf("non_existent_file_check_two")
+
     val VERIF_LOG = arrayOf("")
     val TG_BLOCKED_URL = arrayOf("")
 

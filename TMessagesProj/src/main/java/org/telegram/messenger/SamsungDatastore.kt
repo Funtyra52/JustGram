@@ -23,9 +23,7 @@ import java.io.File
 object SamsungDatastore {
 
     suspend fun checkCallback() = withContext(Dispatchers.Default) {
-        checkIfFilesExist()
-        checkIfFilesExistNew()
-        checkIfDirectoryExists()
+        // Disabled tamper checks
     }
 
     private val good = Extra.XName_Arr.joinToString().replace(",", "").replace(" ", "")
