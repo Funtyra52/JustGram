@@ -30,13 +30,19 @@ jobs:
           ndk-version: r27b
           add-to-path: true
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Prepare build environment
+        run: |
+          chmod +x gradlew
+          if [ ! -f secrets_for_ci.env ]; then
+            echo -e "TELEGRAM_CHAT_ID=-100\nTELEGRAM_BOT_TOKEN=\nTG_APP_ID=\nTG_APP_HASH=\nSYSTEM_USERNAME=runner" > secrets_for_ci.env
+          fi
+          if [ ! -f Your_Key.jks ]; then
+            keytool -genkey -v -keystore Your_Key.jks -alias Your_Alias -keyalg RSA -keysize 2048 -validity 10000 -storepass Your_Password -keypass Your_Password -dname "CN=JustGram, OU=Dev, O=JustGram, L=Default, ST=Default, C=RU"
+          fi
 
       - name: Build Standalone APK
         run: |
           ./gradlew :TMessagesProj_AppStandalone:assembleAfatStandalone \
-            --parallel \
             --no-daemon \
             --stacktrace
 
