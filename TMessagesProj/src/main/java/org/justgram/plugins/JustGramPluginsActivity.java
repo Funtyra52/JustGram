@@ -60,15 +60,17 @@ public class JustGramPluginsActivity extends BaseCGPreferencesEntry {
                 if (meta.isQuarantined()) {
                     subtitle += " [СБОЙ: " + (meta.getLastError() != null ? meta.getLastError() : "Изолирован") + "]";
                 }
-                items.add(UItem.asCheck(rowId, meta.getName())
-                        .setChecked(meta.isEnabled() && !meta.isQuarantined())
-                        .setSubtext(subtitle));
+                UItem checkItem = UItem.asCheck(rowId, meta.getName())
+                        .setChecked(meta.isEnabled() && !meta.isQuarantined());
+                checkItem.subtext = subtitle;
+                items.add(checkItem);
             }
         }
 
         items.add(UItem.asHeader("Производительность UI"));
-        items.add(UItem.asButton(clearCacheRow, "Очистить кэш UI-хуков и рефлексии")
-                .setSubtext("Сброс внутренних кэшей инъекций для освобождения памяти"));
+        UItem clearBtn = UItem.asButton(clearCacheRow, "Очистить кэш UI-хуков и рефлексии");
+        clearBtn.subtext = "Сброс внутренних кэшей инъекций для освобождения памяти";
+        items.add(clearBtn);
         items.add(UItem.asShadow(
                 "Кэширование рефлексии и dirty-checking оптимизируют FPS при прокрутке списков с UI-плагинами."
         ));
@@ -79,7 +81,9 @@ public class JustGramPluginsActivity extends BaseCGPreferencesEntry {
         if (item.id == safeModeToggleRow) {
             boolean next = !JustGramPluginManager.INSTANCE.isSafeMode();
             JustGramPluginManager.INSTANCE.setSafeMode(next);
-            adapter.update(true);
+            if (listView != null && listView.adapter != null) {
+                listView.adapter.update(true);
+            }
         } else if (item.id == clearCacheRow) {
             PluginUIHookManager.INSTANCE.clearCache();
             AndroidUtilities.showSimpleToast(this, "Кэш UI очищен");
@@ -90,7 +94,9 @@ public class JustGramPluginsActivity extends BaseCGPreferencesEntry {
                 PluginMetadata meta = plugins.get(idx);
                 boolean next = !meta.isEnabled();
                 JustGramPluginManager.INSTANCE.togglePlugin(meta.getId(), next);
-                adapter.update(true);
+                if (listView != null && listView.adapter != null) {
+                    listView.adapter.update(true);
+                }
             }
         }
     }

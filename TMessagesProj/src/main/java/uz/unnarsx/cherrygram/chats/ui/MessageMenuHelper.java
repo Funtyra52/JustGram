@@ -136,4 +136,10 @@ public class MessageMenuHelper extends BaseController {
         return false;
     }
 
+    public void createMenu(ChatActivity fragment, View v, ChatActivity.ChatActivityFragmentView contentView, ChatScrimPopupContainerLayout scrimPopupContainerLayout, ReactionsContainerLayout reactionsLayout, MessageObject message, ActionBarPopupWindow.ActionBarPopupWindowLayout popupLayout) {
+    }
+
+    public void hideMessageView(View v, ChatActivity fragment, ChatActivity.ChatActivityAdapter chatAdapter, MessageObject message, Activity activity, boolean hide) {
+    }
+
 }

@@ -686,6 +686,13 @@ public class MessagesFilterHelper {
         return addSpoilerEntities(msg, base);
     }
 
+    public String addSpoilerEntities(String text) {
+        if (text == null || text.length() == 0) return text;
+        if (!CherrygramMessagesConfig.INSTANCE.getEnableMsgFilters()) return text;
+        CharSequence res = obfuscatePreview(text);
+        return res != null ? res.toString() : text;
+    }
+
     public CharSequence addSpoilerEntities(CharSequence text) {
         if (text == null || text.length() == 0) return text;
         if (!CherrygramMessagesConfig.INSTANCE.getEnableMsgFilters()) return text;

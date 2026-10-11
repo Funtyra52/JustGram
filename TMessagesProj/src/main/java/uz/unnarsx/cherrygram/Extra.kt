@@ -73,8 +73,8 @@ object Extra {
         "MS9j", "dXJy", "ZW5j", "aWVz", "L3Rv", "bi5q", "c29u"
     )
 
-    fun getRegistrationDate(fragment: BaseFragment?, userID: Long, chatId: Long) {
-        if (fragment == null) return
+    fun getRegistrationDate(fragment: BaseFragment?, userID: Long, chatId: Long): CharSequence {
+        if (fragment == null) return ""
 
         if (chatId != 0L) {
             val chat = fragment.messagesController?.getChat(chatId)
@@ -100,17 +100,19 @@ object Extra {
                     .setDuration(Bulletin.DURATION_PROLONG)
                     .show()
 
-                return
+                return date
             }
         }
 
         val regDateFromTelegram = fragment.messagesController?.getPeerSettings(userID)?.registration_month
-        val finalRegDate = UserHelper.getUserTime(userID, regDateFromTelegram)
+        val finalRegDate: CharSequence = UserHelper.getUserTime(userID, regDateFromTelegram) ?: ""
 
         BulletinFactory.of(fragment.layoutContainer, fragment.resourceProvider)
             .createSimpleBulletin(R.raw.chats_infotip, finalRegDate)
             .setDuration(Bulletin.DURATION_PROLONG)
             .show()
+
+        return finalRegDate
     }
 
     fun addBirthdayToCalendar(parentActivity: Activity, userId: Long) {
