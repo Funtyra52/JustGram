@@ -585,7 +585,7 @@ public class MessagesFilterHelper {
     public CharSequence collapsePreview(CharSequence text, StaticLayout layout, TextPaint paint, int maxWidth) {
         if (text == null || layout == null || paint == null || layout.getLineCount() <= 1) return null;
 
-        final String tail = LocaleController.getString(R.string.CG_MsgFilterExpand);
+        final String tail = " …";
         final String ellipsis = "… ";
         final float tailWidth = paint.measureText(ellipsis + tail) + AndroidUtilities.dp(1);
 

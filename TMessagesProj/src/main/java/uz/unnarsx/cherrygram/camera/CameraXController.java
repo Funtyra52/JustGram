@@ -92,10 +92,6 @@ public class CameraXController {
         return camera != null;
     }
 
-    public boolean isFrontface() {
-        return isFrontface;
-    }
-
     public void focusToPoint(int x, int y, boolean auto) {
         focusToPoint(x, y);
     }

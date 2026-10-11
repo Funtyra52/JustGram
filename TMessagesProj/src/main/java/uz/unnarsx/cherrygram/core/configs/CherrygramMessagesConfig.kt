@@ -107,7 +107,9 @@ object CherrygramMessagesConfig {
     var msgFilterTransparentMsg by sharedPreferences.boolean("CP_MsgFilterTransparentMsg", false)
     var msgFiltersUseRegex by sharedPreferences.boolean("CP_MsgFiltersUseRegex", false)
     var msgFiltersRegexPatterns by sharedPreferences.string("CP_MsgFiltersRegexPatterns", "")
-    var msgFiltersLogic by sharedPreferences.int("CP_MsgFiltersLogic", 0)
+    const val MSG_FILTERS_LOGIC_OR = 0
+    const val MSG_FILTERS_LOGIC_AND = 1
+    var msgFiltersLogic by sharedPreferences.int("CP_MsgFiltersLogic", MSG_FILTERS_LOGIC_OR)
 
     @JvmStatic
     fun msgFiltersChatList(key: String, account: Int): String {
