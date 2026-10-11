@@ -12,7 +12,9 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#if defined(__has_include) && __has_include("colorado/colorado.h")
 #include "colorado/colorado.h"
+#endif
 
 int registerNativeTgNetFunctions(JavaVM *vm, JNIEnv *env);
 int videoOnJNILoad(JavaVM *vm, JNIEnv *env);
