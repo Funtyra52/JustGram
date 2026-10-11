@@ -1,0 +1,16 @@
+# JustGram Supporters
+# Список спонсоров JustGram (пользователи, поддержавшие проект)
+# Формат: <telegram_user_id> # Опциональный комментарий / никнейм
+# Клиент автоматически читает этот файл с https://raw.githubusercontent.com/Funtyra52/JustGram/main/Supporters.txt
+# и при обнаружении ID рисует бейдж JustGram рядом с никнеймом.
+
+# Creator & Lead Developer JustGram
+5142967559 # Creator & Lead Developer JustGram
+
+# Contributors & Devs
+282287840 # Contributor
+1087968824 # Contributor
+
+# Supporters (добавляются автором при поддержке на сотку+):
+# Пример:
+# 1234567890 # Иван Иванов
