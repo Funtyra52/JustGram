@@ -150,15 +150,15 @@ public class JustGramPreferencesActivity extends BaseCGPreferencesEntry {
             Browser.openUrl(getContext(), "https://github.com/Funtyra52/JustGram");
         } else if (item.id == versionRow) {
             AndroidUtilities.addToClipboard("JustGram 0.1.0-beta.1 (Cherrygram 11.3.0)");
-            BulletinFactory.of(this).createSimpleBulletin(R.drawable.msg_check, "Версия скопирована в буфер").show();
+            BulletinFactory.of(this).createCopyBulletin("Версия скопирована в буфер").show();
         }
     }
 
     private void handleReloadSupporters() {
         if (getContext() == null) return;
-        BulletinFactory.of(this).createSimpleBulletin(R.drawable.msg_download, "Обновление списка спонсоров...").show();
+        BulletinFactory.of(this).createSimpleBulletin(R.raw.chats_infotip, "Обновление списка спонсоров...").show();
         JustGramBadgesManager.INSTANCE.reloadSupporters(getContext(), count -> {
-            if (isFinishing() || getContext() == null) return;
+            if (isFinishing() || getContext() == null) return kotlin.Unit.INSTANCE;
             BulletinFactory.of(this).createSimpleBulletin(
                     R.drawable.justgram_badge,
                     "Спонсоры обновлены! Всего: " + count
@@ -166,7 +166,7 @@ public class JustGramPreferencesActivity extends BaseCGPreferencesEntry {
             if (listView != null && listView.adapter != null) {
                 listView.adapter.update(true);
             }
-            return null;
+            return kotlin.Unit.INSTANCE;
         });
     }
 

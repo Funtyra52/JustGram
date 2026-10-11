@@ -67,23 +67,21 @@ public class JustGramGhostPreferencesEntry extends BaseCGPreferencesEntry {
         if (item.id == masterRow) {
             boolean next = !JustGramGhostConfig.INSTANCE.getGhostModeMaster();
             JustGramGhostConfig.INSTANCE.setGhostModeMaster(next);
-            adapter.update(true);
         } else if (item.id == hideOnlineRow) {
             boolean next = !JustGramGhostConfig.INSTANCE.getHideOnline();
             JustGramGhostConfig.INSTANCE.setHideOnline(next);
-            adapter.update(true);
         } else if (item.id == hideTypingRow) {
             boolean next = !JustGramGhostConfig.INSTANCE.getHideTyping();
             JustGramGhostConfig.INSTANCE.setHideTyping(next);
-            adapter.update(true);
         } else if (item.id == hideReadMessagesRow) {
             boolean next = !JustGramGhostConfig.INSTANCE.getHideReadMessages();
             JustGramGhostConfig.INSTANCE.setHideReadMessages(next);
-            adapter.update(true);
         } else if (item.id == hideReadStoriesRow) {
             boolean next = !JustGramGhostConfig.INSTANCE.getHideReadStories();
             JustGramGhostConfig.INSTANCE.setHideReadStories(next);
-            adapter.update(true);
+        }
+        if (listView != null && listView.adapter != null) {
+            listView.adapter.update(true);
         }
     }
 }

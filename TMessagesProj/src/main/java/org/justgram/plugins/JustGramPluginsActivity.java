@@ -86,7 +86,9 @@ public class JustGramPluginsActivity extends BaseCGPreferencesEntry {
             }
         } else if (item.id == clearCacheRow) {
             PluginUIHookManager.INSTANCE.clearCache();
-            AndroidUtilities.showSimpleToast(this, "Кэш UI очищен");
+            if (getParentActivity() != null) {
+                android.widget.Toast.makeText(getParentActivity(), "Кэш UI очищен", android.widget.Toast.LENGTH_SHORT).show();
+            }
         } else {
             List<PluginMetadata> plugins = JustGramPluginManager.INSTANCE.getAllPlugins();
             int idx = item.id - 1;

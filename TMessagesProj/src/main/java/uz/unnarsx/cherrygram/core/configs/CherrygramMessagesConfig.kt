@@ -105,6 +105,24 @@ object CherrygramMessagesConfig {
     var msgFiltersHideAllUnderSpoiler by sharedPreferences.boolean("CP_MsgFiltersHideAll", false)
     var msgFiltersCollapseAutomatically by sharedPreferences.boolean("CP_MsgFiltersCollapseAutomatically", false)
     var msgFilterTransparentMsg by sharedPreferences.boolean("CP_MsgFilterTransparentMsg", false)
+    var msgFiltersUseRegex by sharedPreferences.boolean("CP_MsgFiltersUseRegex", false)
+    var msgFiltersRegexPatterns by sharedPreferences.string("CP_MsgFiltersRegexPatterns", "")
+    var msgFiltersLogic by sharedPreferences.int("CP_MsgFiltersLogic", 0)
+
+    @JvmStatic
+    fun msgFiltersChatList(key: String, account: Int): String {
+        return sharedPreferences.getString("CP_MsgFiltersChatList_${key}_${account}", "") ?: ""
+    }
+
+    @JvmStatic
+    fun setMsgFiltersChatList(key: String, account: Int, value: String) {
+        sharedPreferences.edit().putString("CP_MsgFiltersChatList_${key}_${account}", value).apply()
+    }
+
+    @JvmStatic
+    fun isCompactForChat(dialogId: Long): Boolean {
+        return false
+    }
     /** Messages filter finish */
 
     const val LEFT_BUTTON_FORWARD_WO_AUTHORSHIP = 0

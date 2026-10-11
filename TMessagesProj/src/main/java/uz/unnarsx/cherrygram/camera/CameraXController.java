@@ -69,9 +69,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 
-import uz.unnarsx.cherrygram.CherrygramConfig;
-
 public class CameraXController {
+
+    public static final int CAMERA_ASPECT_RATIO_SELECTOR = 100;
 
     private boolean isFrontface;
     private boolean isInitiated = false;
@@ -83,6 +83,68 @@ public class CameraXController {
     private boolean abandonCurrentVideo = false;
     private ImageCapture iCapture;
     private Preview previewUseCase;
+
+    public boolean isInitiated() {
+        return isInitiated;
+    }
+
+    public boolean isCameraReady() {
+        return camera != null;
+    }
+
+    public boolean isFrontface() {
+        return isFrontface;
+    }
+
+    public void focusToPoint(int x, int y, boolean auto) {
+        focusToPoint(x, y);
+    }
+
+    public float getZoomRatio() {
+        if (camera != null && camera.getCameraInfo().getZoomState().getValue() != null) {
+            return camera.getCameraInfo().getZoomState().getValue().getZoomRatio();
+        }
+        return 1.0f;
+    }
+
+    public void setZoomRatio(float ratio) {
+        if (camera != null) {
+            camera.getCameraControl().setZoomRatio(ratio);
+        }
+    }
+
+    public float getMinZoomRatio() {
+        if (camera != null && camera.getCameraInfo().getZoomState().getValue() != null) {
+            return camera.getCameraInfo().getZoomState().getValue().getMinZoomRatio();
+        }
+        return 1.0f;
+    }
+
+    public float getMaxZoomRatio() {
+        if (camera != null && camera.getCameraInfo().getZoomState().getValue() != null) {
+            return camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
+        }
+        return 10.0f;
+    }
+
+    public void setOnZoomSettledListener(Runnable listener) {
+    }
+
+    public float[] getLensZoomBreakpoints() {
+        return null;
+    }
+
+    public void setPreviewRotation(int rotation) {
+        if (previewUseCase != null) {
+            previewUseCase.setTargetRotation(rotation);
+        }
+    }
+
+    public void setCaptureRotation(int rotation) {
+        if (iCapture != null) {
+            iCapture.setTargetRotation(rotation);
+        }
+    }
     private VideoCapture<Recorder> vCapture;
     private Recording recording;
     private final MeteringPointFactory meteringPointFactory;
@@ -276,15 +338,7 @@ public class CameraXController {
     }
 
     public android.util.Size getVideoBestSize() {
-        int w, h;
-        android.util.Size size = CameraXUtils.getPreviewBestSize();
-        w = size.getWidth();
-        h = size.getHeight();
-        if ((getDisplayOrientation() == 0 || getDisplayOrientation() == 180) && getDeviceDefaultOrientation() == Configuration.ORIENTATION_PORTRAIT) {
-            return new android.util.Size(h, w);
-        } else {
-            return new android.util.Size(w, h);
-        }
+        return new android.util.Size(1280, 720);
     }
 
     @SuppressLint({"RestrictedApi", "UnsafeExperimentalUsageError", "UnsafeOptInUsageError"})
@@ -324,7 +378,7 @@ public class CameraXController {
         vCapture = VideoCapture.withOutput(recorder);
 
         ImageCapture.Builder iCaptureBuilder = new ImageCapture.Builder()
-                .setCaptureMode(CherrygramConfig.INSTANCE.getUseCameraXOptimizedMode() ? ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG : ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
                 .setTargetAspectRatio(AspectRatio.RATIO_16_9);
 
         provider.unbindAll();

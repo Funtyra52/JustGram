@@ -134,7 +134,7 @@ public class MessageMenuCompactView extends LinearLayout {
         ArrayList<Action> selected = new ArrayList<>(MAX_ACTIONS);
 
         if (!addFirst(selected, available, ChatActivity.OPTION_REPLY)) {
-            addFirst(selected, available, ChatActivity.OPTION_DELETE, ChatActivity.OPTION_DELETE_SAVED);
+            addFirst(selected, available, ChatActivity.OPTION_DELETE);
         }
         addFirst(
                 selected,
@@ -156,7 +156,7 @@ public class MessageMenuCompactView extends LinearLayout {
         );
         addFirst(selected, available, ChatActivity.OPTION_EDIT);
 
-        addFirst(selected, available, ChatActivity.OPTION_DELETE, ChatActivity.OPTION_DELETE_SAVED);
+        addFirst(selected, available, ChatActivity.OPTION_DELETE);
         addFirst(selected, available, ChatActivity.OPTION_SHARE);
         addFirst(selected, available, ChatActivity.OPTION_SAVE_TO_GALLERY, ChatActivity.OPTION_SAVE_TO_GALLERY2);
 
@@ -285,7 +285,7 @@ public class MessageMenuCompactView extends LinearLayout {
         );
         int textColor = normalText;
         int iconColor = normalIcon;
-        if (action.option == ChatActivity.OPTION_DELETE || action.option == ChatActivity.OPTION_DELETE_SAVED) {
+        if (action.option == ChatActivity.OPTION_DELETE) {
             textColor = iconColor = Theme.getColor(Theme.key_text_RedRegular, resourcesProvider);
         }
 
