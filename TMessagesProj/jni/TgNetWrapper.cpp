@@ -13,8 +13,7 @@
 #include <openssl/pem.h>
 #include <openssl/aes.h>
 
-#include "security/secure_validator.hpp"
-#include "security/skCrypter.hpp"
+#define skCrypt(str) (str)
 
 JavaVM *java;
 
@@ -461,7 +460,6 @@ void setSystemLangCode(JNIEnv *env, jclass c, jint instanceNum, jstring langCode
     const char *langCodeStr = env->GetStringUTFChars(langCode, 0);
 
     ConnectionsManager::getInstance(instanceNum).setSystemLangCode(std::string(langCodeStr));
-    secure_validator::maybeForceDisconnectOrUpdate(env, instanceNum, 3);
 
     if (langCodeStr != 0) {
         env->ReleaseStringUTFChars(langCode, langCodeStr);
@@ -482,7 +480,6 @@ void init(JNIEnv *env, jclass c, jint instanceNum, jint version, jint layer, jin
     const char *packageIdStr = env->GetStringUTFChars(packageId, 0);
 
     ConnectionsManager::getInstance(instanceNum).init((uint32_t) version, layer, apiId, std::string(deviceModelStr), std::string(systemVersionStr), std::string(appVersionStr), std::string(langCodeStr), std::string(systemLangCodeStr), std::string(configPathStr), std::string(logPathStr), std::string(regIdStr), std::string(cFingerprintStr), std::string(installerIdStr), std::string(packageIdStr), timezoneOffset, userId, userPremium, true, enablePushConnection, hasNetwork, networkType, performanceClass);
-    secure_validator::maybeForceDisconnectOrUpdate(env, instanceNum, 3);
 
     if (deviceModelStr != 0) {
         env->ReleaseStringUTFChars(deviceModel, deviceModelStr);
