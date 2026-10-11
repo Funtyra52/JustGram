@@ -53,7 +53,7 @@ object JustGramPluginManager {
         if (wasInProgress) {
             // Previous start crashed before completing startup window!
             prefs.edit().putBoolean(KEY_STARTUP_CRASH, true).apply()
-            FileLog.e(TAG, "Detected crash during previous startup! Setting startup_crash_detected=true")
+            FileLog.e("$TAG: Detected crash during previous startup! Setting startup_crash_detected=true")
         }
 
         // Mark startup in progress
@@ -90,8 +90,9 @@ object JustGramPluginManager {
                     loadPlugins(activity.applicationContext)
                 }
 
-                builder.setCancelable(false)
-                builder.show()
+                val dialog = builder.create()
+                dialog.setCancelable(false)
+                dialog.show()
             } catch (t: Throwable) {
                 FileLog.e(TAG, t)
             }
@@ -110,7 +111,7 @@ object JustGramPluginManager {
             registerCorePlugin(context)
 
         } catch (t: Throwable) {
-            FileLog.e(TAG, "Fatal error initializing plugin subsystem", t)
+            FileLog.e("$TAG: Fatal error initializing plugin subsystem", t)
         }
     }
 
@@ -150,7 +151,7 @@ object JustGramPluginManager {
                 pluginsMap[plugin.getId()] = meta
                 FileLog.d("$TAG: Plugin initialized successfully: ${plugin.getId()}")
             } catch (t: Throwable) {
-                FileLog.e(TAG, "Error initializing plugin ${plugin.getId()}", t)
+                FileLog.e("$TAG: Error initializing plugin ${plugin.getId()}", t)
                 meta.isQuarantined = true
                 meta.isEnabled = false
                 meta.lastError = t.message

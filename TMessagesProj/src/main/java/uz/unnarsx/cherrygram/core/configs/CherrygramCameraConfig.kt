@@ -72,6 +72,7 @@ object CherrygramCameraConfig {
     const val EXPOSURE_SLIDER_RIGHT = 2
     const val EXPOSURE_SLIDER_LEFT = 3
     var exposureSlider by sharedPreferences.int("CP_ExposureSlider", EXPOSURE_SLIDER_RIGHT)
+    var cameraExposureIndex by sharedPreferences.int("CP_CameraExposureIndex", 0)
 
     var rearCam by sharedPreferences.boolean("CP_RearCam", false)
 

@@ -54,7 +54,7 @@ object PluginUIHookManager {
             try {
                 plugin.onUIHook(hookId, targetView, extraData)
             } catch (t: Throwable) {
-                FileLog.e(TAG, "Plugin ${meta.id} threw exception on UI hook $hookId", t)
+                FileLog.e("$TAG: Plugin ${meta.id} threw exception on UI hook $hookId", t)
                 // If a plugin repeatedly fails in UI hooks, safely quarantine it
                 meta.lastError = t.message
             }
