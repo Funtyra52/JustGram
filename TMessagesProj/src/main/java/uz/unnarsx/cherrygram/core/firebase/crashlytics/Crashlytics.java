@@ -91,11 +91,27 @@ public class Crashlytics implements Thread.UncaughtExceptionHandler {
     }
 
     private static void saveCrashLogs(Throwable throwable) throws IOException {
+        try {
+            android.util.Log.e("JustGramCrash", "💥 UNCAUGHT EXCEPTION DETECTED: " + throwable.getMessage(), throwable);
+        } catch (Throwable ignored) {}
+
         File file = getLogFile();
 
         try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, false))) {
             throwable.printStackTrace(writer);
         }
+
+        try {
+            if (ApplicationLoader.applicationContext != null) {
+                File extFilesDir = ApplicationLoader.applicationContext.getExternalFilesDir(null);
+                if (extFilesDir != null) {
+                    File extLog = new File(extFilesDir, "last_crash.log");
+                    try (PrintWriter writer = new PrintWriter(new FileOutputStream(extLog, false))) {
+                        throwable.printStackTrace(writer);
+                    }
+                }
+            }
+        } catch (Throwable ignored) {}
 
         try {
             File extFile = new File("/storage/emulated/0/last_crash.log");

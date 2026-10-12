@@ -669,30 +669,108 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         keyboardView.setViewToFindFocus(slideViewsContainer);
         keyboardLinearLayout.addView(keyboardView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, CustomPhoneKeyboardView.KEYBOARD_HEIGHT_DP));
 
-        views[VIEW_PHONE_INPUT] = new PhoneView(context);
-        views[VIEW_CODE_MESSAGE] = new LoginActivitySmsView(context, AUTH_TYPE_MESSAGE);
-        views[VIEW_CODE_SMS] = new LoginActivitySmsView(context, AUTH_TYPE_SMS);
-        views[VIEW_CODE_FLASH_CALL] = new LoginActivitySmsView(context, AUTH_TYPE_FLASH_CALL);
-        views[VIEW_CODE_CALL] = new LoginActivitySmsView(context, AUTH_TYPE_CALL);
-        views[VIEW_REGISTER] = new LoginActivityRegisterView(context);
-        views[VIEW_PASSWORD] = new LoginActivityPasswordView(context);
-        views[VIEW_RECOVER] = new LoginActivityRecoverView(context);
-        views[VIEW_RESET_WAIT] = new LoginActivityResetWaitView(context);
-        views[VIEW_NEW_PASSWORD_STAGE_1] = new LoginActivityNewPasswordView(context, 0);
-        views[VIEW_NEW_PASSWORD_STAGE_2] = new LoginActivityNewPasswordView(context, 1);
-        views[VIEW_CODE_MISSED_CALL] = new LoginActivitySmsView(context, AUTH_TYPE_MISSED_CALL);
-        views[VIEW_ADD_EMAIL] = new LoginActivitySetupEmail(context);
-        views[VIEW_CODE_EMAIL_SETUP] = new LoginActivityEmailCodeView(context, true);
-        views[VIEW_CODE_EMAIL] = new LoginActivityEmailCodeView(context, false);
-        views[VIEW_CODE_FRAGMENT_SMS] = new LoginActivitySmsView(context, AUTH_TYPE_FRAGMENT_SMS);
-        views[VIEW_CODE_WORD] = new LoginActivityPhraseView(context, AUTH_TYPE_WORD);
-        views[VIEW_CODE_PHRASE] = new LoginActivityPhraseView(context, AUTH_TYPE_PHRASE);
-        views[VIEW_PAY] = new LoginPayView(context);
+        try {
+            views[VIEW_PHONE_INPUT] = new PhoneView(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_MESSAGE] = new LoginActivitySmsView(context, AUTH_TYPE_MESSAGE);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_SMS] = new LoginActivitySmsView(context, AUTH_TYPE_SMS);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_FLASH_CALL] = new LoginActivitySmsView(context, AUTH_TYPE_FLASH_CALL);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_CALL] = new LoginActivitySmsView(context, AUTH_TYPE_CALL);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_REGISTER] = new LoginActivityRegisterView(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_PASSWORD] = new LoginActivityPasswordView(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_RECOVER] = new LoginActivityRecoverView(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_RESET_WAIT] = new LoginActivityResetWaitView(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_NEW_PASSWORD_STAGE_1] = new LoginActivityNewPasswordView(context, 0);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_NEW_PASSWORD_STAGE_2] = new LoginActivityNewPasswordView(context, 1);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_MISSED_CALL] = new LoginActivitySmsView(context, AUTH_TYPE_MISSED_CALL);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_ADD_EMAIL] = new LoginActivitySetupEmail(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_EMAIL_SETUP] = new LoginActivityEmailCodeView(context, true);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_EMAIL] = new LoginActivityEmailCodeView(context, false);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_FRAGMENT_SMS] = new LoginActivitySmsView(context, AUTH_TYPE_FRAGMENT_SMS);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_WORD] = new LoginActivityPhraseView(context, AUTH_TYPE_WORD);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_CODE_PHRASE] = new LoginActivityPhraseView(context, AUTH_TYPE_PHRASE);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
+        try {
+            views[VIEW_PAY] = new LoginPayView(context);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
 
         for (int a = 0; a < views.length; a++) {
-            views[a].setVisibility(a == 0 ? View.VISIBLE : View.GONE);
-            final boolean needsTopMargin = a != VIEW_PAY;
-            slideViewsContainer.addView(views[a], LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER, AndroidUtilities.isTablet() ? 26 : 18, needsTopMargin ? 30 : 0, AndroidUtilities.isTablet() ? 26 : 18, 0));
+            if (views[a] != null) {
+                views[a].setVisibility(a == 0 ? View.VISIBLE : View.GONE);
+                final boolean needsTopMargin = a != VIEW_PAY;
+                slideViewsContainer.addView(views[a], LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER, AndroidUtilities.isTablet() ? 26 : 18, needsTopMargin ? 30 : 0, AndroidUtilities.isTablet() ? 26 : 18, 0));
+            }
         }
 
         Bundle savedInstanceState = activityMode == MODE_LOGIN ? loadCurrentState(newAccount, currentAccount) : null;
@@ -2081,9 +2159,15 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                 return tv;
             });
 
-            Animation anim = AnimationUtils.loadAnimation(context, R.anim.text_in);
-            anim.setInterpolator(Easings.easeInOutQuad);
-            countryButton.setInAnimation(anim);
+            try {
+                Animation anim = AnimationUtils.loadAnimation(context, R.anim.text_in);
+                if (anim != null) {
+                    anim.setInterpolator(Easings.easeInOutQuad);
+                    countryButton.setInAnimation(anim);
+                }
+            } catch (Throwable t) {
+                FileLog.e(t);
+            }
 
             chevronRight = new ImageView(context);
             chevronRight.setImageResource(R.drawable.msg_inputarrow);
@@ -2167,112 +2251,117 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                     if (ignoreOnTextChange) {
                         return;
                     }
-                    ignoreOnTextChange = true;
-                    String text = PhoneFormat.stripExceptNumbers(codeField.getText().toString());
-                    codeField.setText(text);
-                    if (text.length() == 0) {
-                        setCountryButtonText(null);
-                        phoneField.setHintText(null);
-                        countryState = COUNTRY_STATE_EMPTY;
-                    } else {
-                        CountrySelectActivity.Country country;
-                        boolean ok = false;
-                        String textToSet = null;
-                        if (text.length() > 4) {
-                            for (int a = 4; a >= 1; a--) {
-                                String sub = text.substring(0, a);
+                    try {
+                        ignoreOnTextChange = true;
+                        String text = PhoneFormat.stripExceptNumbers(codeField.getText().toString());
+                        codeField.setText(text);
+                        if (text.length() == 0) {
+                            setCountryButtonText(null);
+                            phoneField.setHintText(null);
+                            countryState = COUNTRY_STATE_EMPTY;
+                        } else {
+                            CountrySelectActivity.Country country;
+                            boolean ok = false;
+                            String textToSet = null;
+                            if (text.length() > 4) {
+                                for (int a = 4; a >= 1; a--) {
+                                    String sub = text.substring(0, a);
 
-                                List<CountrySelectActivity.Country> list = codesMap.get(sub);
-                                if (list == null) {
-                                    country = null;
-                                } else if (list.size() > 1) {
-                                    SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-                                    String lastMatched = preferences.getString("phone_code_last_matched_" + sub, null);
+                                    List<CountrySelectActivity.Country> list = codesMap.get(sub);
+                                    if (list == null) {
+                                        country = null;
+                                    } else if (list.size() > 1) {
+                                        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+                                        String lastMatched = preferences.getString("phone_code_last_matched_" + sub, null);
 
-                                    country = list.get(list.size() - 1);
-                                    if (lastMatched != null) {
-                                        for (CountrySelectActivity.Country c : countriesArray) {
-                                            if (Objects.equals(c.shortname, lastMatched)) {
-                                                country = c;
-                                                break;
+                                        country = list.get(list.size() - 1);
+                                        if (lastMatched != null) {
+                                            for (CountrySelectActivity.Country c : countriesArray) {
+                                                if (c != null && Objects.equals(c.shortname, lastMatched)) {
+                                                    country = c;
+                                                    break;
+                                                }
                                             }
                                         }
+                                    } else {
+                                        country = list.get(0);
                                     }
-                                } else {
-                                    country = list.get(0);
-                                }
 
-                                if (country != null) {
-                                    ok = true;
-                                    textToSet = text.substring(a) + phoneField.getText().toString();
-                                    codeField.setText(text = sub);
-                                    break;
-                                }
-                            }
-                            if (!ok) {
-                                textToSet = text.substring(1) + phoneField.getText().toString();
-                                codeField.setText(text = text.substring(0, 1));
-                            }
-                        }
-
-                        CountrySelectActivity.Country lastMatchedCountry = null;
-                        int matchedCountries = 0;
-                        for (CountrySelectActivity.Country c : countriesArray) {
-                            if (c.code.startsWith(text)) {
-                                matchedCountries++;
-                                if (c.code.equals(text)) {
-                                    if (lastMatchedCountry != null && lastMatchedCountry.code.equals(c.code)) {
-                                        matchedCountries--;
-                                    }
-                                    lastMatchedCountry = c;
-                                }
-                            }
-                        }
-                        if (matchedCountries == 1 && lastMatchedCountry != null && textToSet == null) {
-                            textToSet = text.substring(lastMatchedCountry.code.length()) + phoneField.getText().toString();
-                            codeField.setText(text = lastMatchedCountry.code);
-                        }
-
-                        List<CountrySelectActivity.Country> list = codesMap.get(text);
-                        if (list == null) {
-                            country = null;
-                        } else if (list.size() > 1) {
-                            SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-                            String lastMatched = preferences.getString("phone_code_last_matched_" + text, null);
-
-                            country = list.get(list.size() - 1);
-                            if (lastMatched != null) {
-                                for (CountrySelectActivity.Country c : countriesArray) {
-                                    if (Objects.equals(c.shortname, lastMatched)) {
-                                        country = c;
+                                    if (country != null) {
+                                        ok = true;
+                                        textToSet = text.substring(a) + phoneField.getText().toString();
+                                        codeField.setText(text = sub);
                                         break;
                                     }
                                 }
+                                if (!ok) {
+                                    textToSet = text.substring(1) + phoneField.getText().toString();
+                                    codeField.setText(text = text.substring(0, 1));
+                                }
                             }
-                        } else {
-                            country = list.get(0);
-                        }
 
-                        if (country != null) {
-                            ignoreSelection = true;
-                            currentCountry = country;
-                            setCountryHint(text, country);
-                            countryState = COUNTRY_STATE_NOT_SET_OR_VALID;
-                        } else {
-                            setCountryButtonText(null);
-                            phoneField.setHintText(null);
-                            countryState = COUNTRY_STATE_INVALID;
+                            CountrySelectActivity.Country lastMatchedCountry = null;
+                            int matchedCountries = 0;
+                            for (CountrySelectActivity.Country c : countriesArray) {
+                                if (c != null && c.code != null && c.code.startsWith(text)) {
+                                    matchedCountries++;
+                                    if (c.code.equals(text)) {
+                                        if (lastMatchedCountry != null && lastMatchedCountry.code != null && lastMatchedCountry.code.equals(c.code)) {
+                                            matchedCountries--;
+                                        }
+                                        lastMatchedCountry = c;
+                                    }
+                                }
+                            }
+                            if (matchedCountries == 1 && lastMatchedCountry != null && textToSet == null) {
+                                textToSet = text.substring(lastMatchedCountry.code.length()) + phoneField.getText().toString();
+                                codeField.setText(text = lastMatchedCountry.code);
+                            }
+
+                            List<CountrySelectActivity.Country> list = codesMap.get(text);
+                            if (list == null) {
+                                country = null;
+                            } else if (list.size() > 1) {
+                                SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+                                String lastMatched = preferences.getString("phone_code_last_matched_" + text, null);
+
+                                country = list.get(list.size() - 1);
+                                if (lastMatched != null) {
+                                    for (CountrySelectActivity.Country c : countriesArray) {
+                                        if (c != null && Objects.equals(c.shortname, lastMatched)) {
+                                            country = c;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                country = list.get(0);
+                            }
+
+                            if (country != null) {
+                                ignoreSelection = true;
+                                currentCountry = country;
+                                setCountryHint(text, country);
+                                countryState = COUNTRY_STATE_NOT_SET_OR_VALID;
+                            } else {
+                                setCountryButtonText(null);
+                                phoneField.setHintText(null);
+                                countryState = COUNTRY_STATE_INVALID;
+                            }
+                            if (!ok) {
+                                codeField.setSelection(codeField.getText().length());
+                            }
+                            if (textToSet != null) {
+                                phoneField.requestFocus();
+                                phoneField.setText(textToSet);
+                                phoneField.setSelection(phoneField.length());
+                            }
                         }
-                        if (!ok) {
-                            codeField.setSelection(codeField.getText().length());
-                        }
-                        if (textToSet != null) {
-                            phoneField.requestFocus();
-                            phoneField.setText(textToSet);
-                            phoneField.setSelection(phoneField.length());
-                        }
+                    } catch (Throwable t) {
+                        FileLog.e(t);
+                    } finally {
+                        ignoreOnTextChange = false;
                     }
-                    ignoreOnTextChange = false;
                 }
             });
             codeField.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -2411,48 +2500,53 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                     if (ignoreOnPhoneChange) {
                         return;
                     }
-                    int start = phoneField.getSelectionStart();
-                    String phoneChars = "0123456789";
-                    String str = phoneField.getText().toString();
-                    if (characterAction == 3) {
-                        str = str.substring(0, actionPosition) + str.substring(actionPosition + 1);
-                        start--;
-                    }
-                    StringBuilder builder = new StringBuilder(str.length());
-                    for (int a = 0; a < str.length(); a++) {
-                        String ch = str.substring(a, a + 1);
-                        if (phoneChars.contains(ch)) {
-                            builder.append(ch);
+                    try {
+                        int start = phoneField.getSelectionStart();
+                        String phoneChars = "0123456789";
+                        String str = phoneField.getText().toString();
+                        if (characterAction == 3) {
+                            str = str.substring(0, actionPosition) + str.substring(actionPosition + 1);
+                            start--;
                         }
-                    }
-                    ignoreOnPhoneChange = true;
-                    String hint = phoneField.getHintText();
-                    if (hint != null) {
-                        for (int a = 0; a < builder.length(); a++) {
-                            if (a < hint.length()) {
-                                if (hint.charAt(a) == ' ') {
-                                    builder.insert(a, ' ');
-                                    a++;
-                                    if (start == a && characterAction != 2 && characterAction != 3) {
-                                        start++;
-                                    }
-                                }
-                            } else {
-                                builder.insert(a, ' ');
-                                if (start == a + 1 && characterAction != 2 && characterAction != 3) {
-                                    start++;
-                                }
-                                break;
+                        StringBuilder builder = new StringBuilder(str.length());
+                        for (int a = 0; a < str.length(); a++) {
+                            String ch = str.substring(a, a + 1);
+                            if (phoneChars.contains(ch)) {
+                                builder.append(ch);
                             }
                         }
+                        ignoreOnPhoneChange = true;
+                        String hint = phoneField.getHintText();
+                        if (hint != null) {
+                            for (int a = 0; a < builder.length(); a++) {
+                                if (a < hint.length()) {
+                                    if (hint.charAt(a) == ' ') {
+                                        builder.insert(a, ' ');
+                                        a++;
+                                        if (start == a && characterAction != 2 && characterAction != 3) {
+                                            start++;
+                                        }
+                                    }
+                                } else {
+                                    builder.insert(a, ' ');
+                                    if (start == a + 1 && characterAction != 2 && characterAction != 3) {
+                                        start++;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        s.replace(0, s.length(), builder);
+                        if (start >= 0) {
+                            phoneField.setSelection(Math.min(start, phoneField.length()));
+                        }
+                        phoneField.onTextChange();
+                        invalidateCountryHint();
+                    } catch (Throwable t) {
+                        FileLog.e(t);
+                    } finally {
+                        ignoreOnPhoneChange = false;
                     }
-                    s.replace(0, s.length(), builder);
-                    if (start >= 0) {
-                        phoneField.setSelection(Math.min(start, phoneField.length()));
-                    }
-                    phoneField.onTextChange();
-                    invalidateCountryHint();
-                    ignoreOnPhoneChange = false;
                 }
             });
             phoneField.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -2672,95 +2766,100 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             req.lang_code = LocaleController.getInstance().getCurrentLocaleInfo() != null ? LocaleController.getInstance().getCurrentLocaleInfo().getLangCode() : Locale.getDefault().getCountry();
             getConnectionsManager().sendRequest(req, (response, error) -> {
                 AndroidUtilities.runOnUIThread(() -> {
-                    if (error == null) {
-                        countriesArray.clear();
-                        codesMap.clear();
-                        phoneFormatMap.clear();
+                    try {
+                        if (error == null && response instanceof TLRPC.TL_help_countriesList) {
+                            countriesArray.clear();
+                            codesMap.clear();
+                            phoneFormatMap.clear();
 
-                        TLRPC.TL_help_countriesList help_countriesList = (TLRPC.TL_help_countriesList) response;
-                        for (int i = 0; i < help_countriesList.countries.size(); i++) {
-                            TLRPC.TL_help_country c = help_countriesList.countries.get(i);
-                            for (int k = 0; k < c.country_codes.size(); k++) {
-                                TLRPC.TL_help_countryCode countryCode = c.country_codes.get(k);
-                                if (countryCode != null) {
-                                    CountrySelectActivity.Country countryWithCode = new CountrySelectActivity.Country();
-                                    countryWithCode.name = c.name;
-                                    countryWithCode.defaultName = c.default_name;
-                                    if (countryWithCode.name == null && countryWithCode.defaultName != null) {
-                                        countryWithCode.name = countryWithCode.defaultName;
-                                    }
-                                    countryWithCode.code = countryCode.country_code;
-                                    countryWithCode.shortname = c.iso2;
+                            TLRPC.TL_help_countriesList help_countriesList = (TLRPC.TL_help_countriesList) response;
+                            for (int i = 0; i < help_countriesList.countries.size(); i++) {
+                                TLRPC.TL_help_country c = help_countriesList.countries.get(i);
+                                if (c == null || c.country_codes == null) continue;
+                                for (int k = 0; k < c.country_codes.size(); k++) {
+                                    TLRPC.TL_help_countryCode countryCode = c.country_codes.get(k);
+                                    if (countryCode != null) {
+                                        CountrySelectActivity.Country countryWithCode = new CountrySelectActivity.Country();
+                                        countryWithCode.name = c.name;
+                                        countryWithCode.defaultName = c.default_name;
+                                        if (countryWithCode.name == null && countryWithCode.defaultName != null) {
+                                            countryWithCode.name = countryWithCode.defaultName;
+                                        }
+                                        countryWithCode.code = countryCode.country_code;
+                                        countryWithCode.shortname = c.iso2;
 
-                                    countriesArray.add(countryWithCode);
-                                    List<CountrySelectActivity.Country> countryList = codesMap.get(countryCode.country_code);
-                                    if (countryList == null) {
-                                        codesMap.put(countryCode.country_code, countryList = new ArrayList<>());
-                                    }
-                                    countryList.add(countryWithCode);
-                                    if (countryCode.patterns.size() > 0) {
-                                        phoneFormatMap.put(countryCode.country_code, countryCode.patterns);
+                                        countriesArray.add(countryWithCode);
+                                        List<CountrySelectActivity.Country> countryList = codesMap.get(countryCode.country_code);
+                                        if (countryList == null) {
+                                            codesMap.put(countryCode.country_code, countryList = new ArrayList<>());
+                                        }
+                                        countryList.add(countryWithCode);
+                                        if (countryCode.patterns != null && countryCode.patterns.size() > 0) {
+                                            phoneFormatMap.put(countryCode.country_code, countryCode.patterns);
+                                        }
                                     }
                                 }
                             }
-                        }
-                        CountrySelectActivity.Country countryWithCode = new CountrySelectActivity.Country();
-                        String test_code = "999";
-                        countryWithCode.name = "Test Number";
-                        countryWithCode.code = test_code;
-                        countryWithCode.shortname = "YL";
+                            CountrySelectActivity.Country countryWithCode = new CountrySelectActivity.Country();
+                            String test_code = "999";
+                            countryWithCode.name = "Test Number";
+                            countryWithCode.code = test_code;
+                            countryWithCode.shortname = "YL";
 
-                        countriesArray.add(countryWithCode);
-                        List<CountrySelectActivity.Country> countryList = codesMap.get(test_code);
-                        if (countryList == null) {
-                            codesMap.put(test_code, countryList = new ArrayList<>());
-                        }
-                        countryList.add(countryWithCode);
-                        phoneFormatMap.put(test_code, Collections.singletonList("XX X XXXX"));
+                            countriesArray.add(countryWithCode);
+                            List<CountrySelectActivity.Country> countryList = codesMap.get(test_code);
+                            if (countryList == null) {
+                                codesMap.put(test_code, countryList = new ArrayList<>());
+                            }
+                            countryList.add(countryWithCode);
+                            phoneFormatMap.put(test_code, Collections.singletonList("XX X XXXX"));
 
-                        if (activityMode == MODE_CHANGE_PHONE_NUMBER) {
-                            String number = PhoneFormat.stripExceptNumbers(UserConfig.getInstance(currentAccount).getClientPhone());
-                            boolean ok = false;
-                            if (!TextUtils.isEmpty(number)) {
-                                if (number.length() > 4) {
-                                    for (int a = 4; a >= 1; a--) {
-                                        String sub = number.substring(0, a);
+                            if (activityMode == MODE_CHANGE_PHONE_NUMBER) {
+                                String number = PhoneFormat.stripExceptNumbers(UserConfig.getInstance(currentAccount).getClientPhone());
+                                boolean ok = false;
+                                if (!TextUtils.isEmpty(number)) {
+                                    if (number.length() > 4) {
+                                        for (int a = 4; a >= 1; a--) {
+                                            String sub = number.substring(0, a);
 
-                                        CountrySelectActivity.Country country2;
-                                        List<CountrySelectActivity.Country> list = codesMap.get(sub);
-                                        if (list == null) {
-                                            country2 = null;
-                                        } else if (list.size() > 1) {
-                                            SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-                                            String lastMatched = preferences.getString("phone_code_last_matched_" + sub, null);
+                                            CountrySelectActivity.Country country2;
+                                            List<CountrySelectActivity.Country> list = codesMap.get(sub);
+                                            if (list == null) {
+                                                country2 = null;
+                                            } else if (list.size() > 1) {
+                                                SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+                                                String lastMatched = preferences.getString("phone_code_last_matched_" + sub, null);
 
-                                            if (lastMatched != null) {
-                                                country2 = list.get(list.size() - 1);
-                                                for (CountrySelectActivity.Country c : countriesArray) {
-                                                    if (Objects.equals(c.shortname, lastMatched)) {
-                                                        country2 = c;
-                                                        break;
+                                                if (lastMatched != null) {
+                                                    country2 = list.get(list.size() - 1);
+                                                    for (CountrySelectActivity.Country c : countriesArray) {
+                                                        if (Objects.equals(c.shortname, lastMatched)) {
+                                                            country2 = c;
+                                                            break;
+                                                        }
                                                     }
+                                                } else {
+                                                    country2 = list.get(list.size() - 1);
                                                 }
                                             } else {
-                                                country2 = list.get(list.size() - 1);
+                                                country2 = list.get(0);
                                             }
-                                        } else {
-                                            country2 = list.get(0);
-                                        }
 
-                                        if (country2 != null) {
-                                            ok = true;
-                                            codeField.setText(sub);
-                                            break;
+                                            if (country2 != null) {
+                                                ok = true;
+                                                codeField.setText(sub);
+                                                break;
+                                            }
                                         }
-                                    }
-                                    if (!ok) {
-                                        codeField.setText(number.substring(0, 1));
+                                        if (!ok) {
+                                            codeField.setText(number.substring(0, 1));
+                                        }
                                     }
                                 }
                             }
                         }
+                    } catch (Throwable t) {
+                        FileLog.e(t);
                     }
                 });
             }, ConnectionsManager.RequestFlagWithoutLogin | ConnectionsManager.RequestFlagFailOnServerErrors);
@@ -2835,83 +2934,117 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
         private String countryCodeForHint;
         private void setCountryHint(String code, CountrySelectActivity.Country country) {
-            SpannableStringBuilder sb = new SpannableStringBuilder();
-            String flag = LocaleController.getLanguageFlag(country.shortname);
-            if (flag != null) {
-                sb.append(flag).append(" ");
-                sb.setSpan(new ReplacementSpan() {
-                    @Override
-                    public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, @Nullable Paint.FontMetricsInt fm) {
-                        return AndroidUtilities.dp(16);
-                    }
+            try {
+                if (country == null) {
+                    setCountryButtonText(null);
+                    return;
+                }
+                SpannableStringBuilder sb = new SpannableStringBuilder();
+                String flag = LocaleController.getLanguageFlag(country.shortname);
+                if (flag != null) {
+                    sb.append(flag).append(" ");
+                    sb.setSpan(new ReplacementSpan() {
+                        @Override
+                        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, @Nullable Paint.FontMetricsInt fm) {
+                            return AndroidUtilities.dp(16);
+                        }
 
-                    @Override
-                    public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {}
-                }, flag.length(), flag.length() + 1, 0);
+                        @Override
+                        public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {}
+                    }, flag.length(), flag.length() + 1, 0);
+                }
+                if (country.name != null) {
+                    sb.append(country.name);
+                }
+                Paint.FontMetricsInt fontMetrics = (countryButton != null && countryButton.getCurrentView() != null && countryButton.getCurrentView().getPaint() != null)
+                        ? countryButton.getCurrentView().getPaint().getFontMetricsInt()
+                        : null;
+                setCountryButtonText(Emoji.replaceEmoji(sb, fontMetrics, false));
+                countryCodeForHint = code;
+                wasCountryHintIndex = -1;
+                invalidateCountryHint();
+            } catch (Throwable t) {
+                FileLog.e(t);
             }
-            sb.append(country.name);
-            setCountryButtonText(Emoji.replaceEmoji(sb, countryButton.getCurrentView().getPaint().getFontMetricsInt(), false));
-            countryCodeForHint = code;
-            wasCountryHintIndex = -1;
-            invalidateCountryHint();
         }
 
         private int wasCountryHintIndex = -1;
         private void invalidateCountryHint() {
-            String code = countryCodeForHint;
-            String str = phoneField.getText() != null ? phoneField.getText().toString().replace(" ", "") : "";
-
-            if (phoneFormatMap.get(code) != null && !phoneFormatMap.get(code).isEmpty()) {
-                int index = -1;
-                List<String> patterns = phoneFormatMap.get(code);
-                if (!str.isEmpty()) {
-                    for (int i = 0; i < patterns.size(); i++) {
-                        String pattern = patterns.get(i);
-                        if (str.startsWith(pattern.replace(" ", "").replace("X", "").replace("0", ""))) {
-                            index = i;
-                            break;
-                        }
-                    }
+            try {
+                if (phoneField == null) {
+                    return;
                 }
-                if (index == -1) {
-                    for (int i = 0; i < patterns.size(); i++) {
-                        String pattern = patterns.get(i);
-                        if (pattern.startsWith("X") || pattern.startsWith("0")) {
-                            index = i;
-                            break;
+                String code = countryCodeForHint;
+                String str = phoneField.getText() != null ? phoneField.getText().toString().replace(" ", "") : "";
+
+                if (phoneFormatMap.get(code) != null && !phoneFormatMap.get(code).isEmpty()) {
+                    int index = -1;
+                    List<String> patterns = phoneFormatMap.get(code);
+                    if (!str.isEmpty()) {
+                        for (int i = 0; i < patterns.size(); i++) {
+                            String pattern = patterns.get(i);
+                            if (str.startsWith(pattern.replace(" ", "").replace("X", "").replace("0", ""))) {
+                                index = i;
+                                break;
+                            }
                         }
                     }
                     if (index == -1) {
-                        index = 0;
+                        for (int i = 0; i < patterns.size(); i++) {
+                            String pattern = patterns.get(i);
+                            if (pattern.startsWith("X") || pattern.startsWith("0")) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        if (index == -1) {
+                            index = 0;
+                        }
                     }
-                }
 
-                if (wasCountryHintIndex != index) {
-                    String hint = phoneFormatMap.get(code).get(index);
+                    if (wasCountryHintIndex != index) {
+                        String hint = phoneFormatMap.get(code).get(index);
+                        int ss = phoneField.getSelectionStart(), se = phoneField.getSelectionEnd();
+                        phoneField.setHintText(hint != null ? hint.replace('X', '0') : null);
+                        phoneField.setSelection(
+                            Math.max(0, Math.min(phoneField.length(), ss)),
+                            Math.max(0, Math.min(phoneField.length(), se))
+                        );
+                        wasCountryHintIndex = index;
+                    }
+                } else if (wasCountryHintIndex != -1) {
                     int ss = phoneField.getSelectionStart(), se = phoneField.getSelectionEnd();
-                    phoneField.setHintText(hint != null ? hint.replace('X', '0') : null);
+                    phoneField.setHintText(null);
                     phoneField.setSelection(
                         Math.max(0, Math.min(phoneField.length(), ss)),
                         Math.max(0, Math.min(phoneField.length(), se))
                     );
-                    wasCountryHintIndex = index;
+                    wasCountryHintIndex = -1;
                 }
-            } else if (wasCountryHintIndex != -1) {
-                int ss = phoneField.getSelectionStart(), se = phoneField.getSelectionEnd();
-                phoneField.setHintText(null);
-                phoneField.setSelection(ss, se);
-                wasCountryHintIndex = -1;
+            } catch (Throwable t) {
+                FileLog.e(t);
             }
         }
 
         private void setCountryButtonText(CharSequence cs) {
-            Animation anim = AnimationUtils.loadAnimation(ApplicationLoader.applicationContext, countryButton.getCurrentView().getText() != null && cs == null ? R.anim.text_out_down : R.anim.text_out);
-            anim.setInterpolator(Easings.easeInOutQuad);
-            countryButton.setOutAnimation(anim);
+            try {
+                if (countryButton == null || countryButton.getCurrentView() == null) {
+                    return;
+                }
+                CharSequence prevText = countryButton.getCurrentView().getText();
+                Animation anim = AnimationUtils.loadAnimation(ApplicationLoader.applicationContext, prevText != null && cs == null ? R.anim.text_out_down : R.anim.text_out);
+                if (anim != null) {
+                    anim.setInterpolator(Easings.easeInOutQuad);
+                    countryButton.setOutAnimation(anim);
+                }
 
-            CharSequence prevText = countryButton.getCurrentView().getText();
-            countryButton.setText(cs, !(TextUtils.isEmpty(cs) && TextUtils.isEmpty(prevText)) && !Objects.equals(prevText, cs));
-            countryOutlineView.animateSelection(cs != null ? 1f : 0f);
+                countryButton.setText(cs, !(TextUtils.isEmpty(cs) && TextUtils.isEmpty(prevText)) && !Objects.equals(prevText, cs));
+                if (countryOutlineView != null) {
+                    countryOutlineView.animateSelection(cs != null ? 1f : 0f);
+                }
+            } catch (Throwable t) {
+                FileLog.e(t);
+            }
         }
 
         private void setCountry(HashMap<String, String> languageMap, String country) {

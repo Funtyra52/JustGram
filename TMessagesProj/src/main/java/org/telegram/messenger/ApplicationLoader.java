@@ -314,6 +314,12 @@ public class ApplicationLoader extends Application {
 
         }
 
+        try {
+            Thread.setDefaultUncaughtExceptionHandler(new uz.unnarsx.cherrygram.core.firebase.crashlytics.Crashlytics());
+        } catch (Throwable ignore) {
+
+        }
+
         super.onCreate();
 
         // AndroidUtilities must be initialized before FileLog
