@@ -135,7 +135,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         MessagesController.getGlobalMainSettings().edit().putLong("intro_crashed_time", System.currentTimeMillis()).apply();
 
         titles = new CharSequence[]{
-                LocaleController.getString(R.string.CG_AppName),
+                "JustGram",
                 LocaleController.getString(R.string.Page2Title),
                 LocaleController.getString(R.string.Page3Title),
                 LocaleController.getString(R.string.Page5Title),
@@ -676,144 +676,151 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         }
 
         private boolean initGL() {
-            egl10 = (EGL10) EGLContext.getEGL();
+            try {
+                egl10 = (EGL10) EGLContext.getEGL();
 
-            eglDisplay = egl10.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
-            if (eglDisplay == EGL10.EGL_NO_DISPLAY) {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("eglGetDisplay failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                eglDisplay = egl10.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+                if (eglDisplay == EGL10.EGL_NO_DISPLAY) {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("eglGetDisplay failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                    }
+                    finish();
+                    return false;
                 }
-                finish();
-                return false;
-            }
 
-            int[] version = new int[2];
-            if (!egl10.eglInitialize(eglDisplay, version)) {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("eglInitialize failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                int[] version = new int[2];
+                if (!egl10.eglInitialize(eglDisplay, version)) {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("eglInitialize failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                    }
+                    finish();
+                    return false;
                 }
-                finish();
-                return false;
-            }
 
-            int[] configsCount = new int[1];
-            EGLConfig[] configs = new EGLConfig[1];
-            int[] configSpec;
-            if (EmuDetector.with(getParentActivity()).detect()) {
-                configSpec = new int[] {
-                        EGL10.EGL_RED_SIZE, 8,
-                        EGL10.EGL_GREEN_SIZE, 8,
-                        EGL10.EGL_BLUE_SIZE, 8,
-                        EGL10.EGL_ALPHA_SIZE, 8,
-                        EGL10.EGL_DEPTH_SIZE, 24,
-                        EGL10.EGL_NONE
-                };
-            } else {
-                configSpec = new int[] {
-                        EGL10.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-                        EGL10.EGL_RED_SIZE, 8,
-                        EGL10.EGL_GREEN_SIZE, 8,
-                        EGL10.EGL_BLUE_SIZE, 8,
-                        EGL10.EGL_ALPHA_SIZE, 8,
-                        EGL10.EGL_DEPTH_SIZE, 24,
-                        EGL10.EGL_STENCIL_SIZE, 0,
-                        EGL10.EGL_SAMPLE_BUFFERS, 1,
-                        EGL10.EGL_SAMPLES, 2,
-                        EGL10.EGL_NONE
-                };
-            }
-            if (!egl10.eglChooseConfig(eglDisplay, configSpec, configs, 1, configsCount)) {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("eglChooseConfig failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                Context ctx = getParentActivity() != null ? getParentActivity() : ApplicationLoader.applicationContext;
+                int[] configsCount = new int[1];
+                EGLConfig[] configs = new EGLConfig[1];
+                int[] configSpec;
+                if (ctx != null && EmuDetector.with(ctx).detect()) {
+                    configSpec = new int[] {
+                            EGL10.EGL_RED_SIZE, 8,
+                            EGL10.EGL_GREEN_SIZE, 8,
+                            EGL10.EGL_BLUE_SIZE, 8,
+                            EGL10.EGL_ALPHA_SIZE, 8,
+                            EGL10.EGL_DEPTH_SIZE, 24,
+                            EGL10.EGL_NONE
+                    };
+                } else {
+                    configSpec = new int[] {
+                            EGL10.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                            EGL10.EGL_RED_SIZE, 8,
+                            EGL10.EGL_GREEN_SIZE, 8,
+                            EGL10.EGL_BLUE_SIZE, 8,
+                            EGL10.EGL_ALPHA_SIZE, 8,
+                            EGL10.EGL_DEPTH_SIZE, 24,
+                            EGL10.EGL_STENCIL_SIZE, 0,
+                            EGL10.EGL_SAMPLE_BUFFERS, 1,
+                            EGL10.EGL_SAMPLES, 2,
+                            EGL10.EGL_NONE
+                    };
                 }
-                finish();
-                return false;
-            } else if (configsCount[0] > 0) {
-                eglConfig = configs[0];
-            } else {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("eglConfig not initialized");
+                if (!egl10.eglChooseConfig(eglDisplay, configSpec, configs, 1, configsCount)) {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("eglChooseConfig failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                    }
+                    finish();
+                    return false;
+                } else if (configsCount[0] > 0) {
+                    eglConfig = configs[0];
+                } else {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("eglConfig not initialized");
+                    }
+                    finish();
+                    return false;
                 }
-                finish();
-                return false;
-            }
 
-            int[] attrib_list = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
-            eglContext = egl10.eglCreateContext(eglDisplay, eglConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
-            if (eglContext == null) {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("eglCreateContext failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                int[] attrib_list = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
+                eglContext = egl10.eglCreateContext(eglDisplay, eglConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
+                if (eglContext == null) {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("eglCreateContext failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                    }
+                    finish();
+                    return false;
                 }
-                finish();
-                return false;
-            }
 
-            if (surfaceTexture instanceof SurfaceTexture) {
-                eglSurface = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, surfaceTexture, null);
-            } else {
-                finish();
-                return false;
-            }
-
-            if (eglSurface == null || eglSurface == EGL10.EGL_NO_SURFACE) {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("createWindowSurface failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                if (surfaceTexture instanceof SurfaceTexture) {
+                    eglSurface = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, surfaceTexture, null);
+                } else {
+                    finish();
+                    return false;
                 }
-                finish();
-                return false;
-            }
-            if (!egl10.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.e("eglMakeCurrent failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+
+                if (eglSurface == null || eglSurface == EGL10.EGL_NO_SURFACE) {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("createWindowSurface failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                    }
+                    finish();
+                    return false;
                 }
+                if (!egl10.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
+                    if (BuildVars.LOGS_ENABLED) {
+                        FileLog.e("eglMakeCurrent failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                    }
+                    finish();
+                    return false;
+                }
+
+                GLES20.glGenTextures(24, textures, 0);
+                loadTexture(R.drawable.intro_fast_arrow_shadow, 0);
+                loadTexture(R.drawable.intro_fast_arrow, 1);
+                loadTexture(R.drawable.intro_fast_body, 2);
+                loadTexture(R.drawable.intro_fast_spiral, 3);
+                loadTexture(R.drawable.intro_ic_bubble_dot, 4);
+                loadTexture(R.drawable.intro_ic_bubble, 5);
+                loadTexture(R.drawable.intro_ic_cam_lens, 6);
+                loadTexture(R.drawable.intro_ic_cam, 7);
+                loadTexture(R.drawable.intro_ic_pencil, 8);
+                loadTexture(R.drawable.intro_ic_pin, 9);
+                loadTexture(R.drawable.intro_ic_smile_eye, 10);
+                loadTexture(R.drawable.intro_ic_smile, 11);
+                loadTexture(R.drawable.intro_ic_videocam, 12);
+                loadTexture(R.drawable.intro_knot_down, 13);
+                loadTexture(R.drawable.intro_knot_up, 14);
+                loadTexture(R.drawable.intro_powerful_infinity_white, 15);
+                loadTexture(R.drawable.intro_powerful_infinity, 16);
+                loadTexture(R.drawable.intro_powerful_mask, 17, Theme.getColor(Theme.key_windowBackgroundWhite), false);
+                loadTexture(R.drawable.intro_powerful_star, 18);
+                loadTexture(R.drawable.intro_private_door, 19);
+                loadTexture(R.drawable.intro_private_screw, 20);
+                loadTexture(R.drawable.intro_tg_plane, 21);
+                loadTexture(v -> {
+                    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    paint.setColor(0xFF2EA6FF); // JustGram logo color
+                    int size = dp(ICON_HEIGHT_DP);
+                    Bitmap bm = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+                    Canvas c = new Canvas(bm);
+                    c.drawCircle(size / 2f, size / 2f, size / 2f, paint);
+                    return bm;
+                }, 22);
+                loadTexture(telegramMaskProvider, 23);
+
+                updateTelegramTextures();
+                updatePowerfulTextures();
+                Intro.setPrivateTextures(textures[19], textures[20]);
+                Intro.setFreeTextures(textures[14], textures[13]);
+                Intro.setFastTextures(textures[2], textures[3], textures[1], textures[0]);
+                Intro.setIcTextures(textures[4], textures[5], textures[6], textures[7], textures[8], textures[9], textures[10], textures[11], textures[12]);
+                Intro.onSurfaceCreated();
+                currentDate = System.currentTimeMillis() - 1000;
+
+                return true;
+            } catch (Throwable t) {
+                FileLog.e(t);
                 finish();
                 return false;
             }
-
-            GLES20.glGenTextures(23, textures, 0);
-            loadTexture(R.drawable.intro_fast_arrow_shadow, 0);
-            loadTexture(R.drawable.intro_fast_arrow, 1);
-            loadTexture(R.drawable.intro_fast_body, 2);
-            loadTexture(R.drawable.intro_fast_spiral, 3);
-            loadTexture(R.drawable.intro_ic_bubble_dot, 4);
-            loadTexture(R.drawable.intro_ic_bubble, 5);
-            loadTexture(R.drawable.intro_ic_cam_lens, 6);
-            loadTexture(R.drawable.intro_ic_cam, 7);
-            loadTexture(R.drawable.intro_ic_pencil, 8);
-            loadTexture(R.drawable.intro_ic_pin, 9);
-            loadTexture(R.drawable.intro_ic_smile_eye, 10);
-            loadTexture(R.drawable.intro_ic_smile, 11);
-            loadTexture(R.drawable.intro_ic_videocam, 12);
-            loadTexture(R.drawable.intro_knot_down, 13);
-            loadTexture(R.drawable.intro_knot_up, 14);
-            loadTexture(R.drawable.intro_powerful_infinity_white, 15);
-            loadTexture(R.drawable.intro_powerful_infinity, 16);
-            loadTexture(R.drawable.intro_powerful_mask, 17, Theme.getColor(Theme.key_windowBackgroundWhite), false);
-            loadTexture(R.drawable.intro_powerful_star, 18);
-            loadTexture(R.drawable.intro_private_door, 19);
-            loadTexture(R.drawable.intro_private_screw, 20);
-            loadTexture(R.drawable.intro_tg_plane, 21);
-            loadTexture(v -> {
-                Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                paint.setColor(ThemeColors.CHERRYGRAM_COLOR); // It's logo color, it should not be colored by the theme
-                int size = dp(ICON_HEIGHT_DP);
-                Bitmap bm = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(bm);
-                c.drawCircle(size / 2f, size / 2f, size / 2f, paint);
-                return bm;
-            }, 22);
-            loadTexture(telegramMaskProvider, 23);
-
-            updateTelegramTextures();
-            updatePowerfulTextures();
-            Intro.setPrivateTextures(textures[19], textures[20]);
-            Intro.setFreeTextures(textures[14], textures[13]);
-            Intro.setFastTextures(textures[2], textures[3], textures[1], textures[0]);
-            Intro.setIcTextures(textures[4], textures[5], textures[6], textures[7], textures[8], textures[9], textures[10], textures[11], textures[12]);
-            Intro.onSurfaceCreated();
-            currentDate = System.currentTimeMillis() - 1000;
-
-            return true;
         }
 
         public void updateTelegramTextures() {
@@ -843,42 +850,46 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         private Runnable drawRunnable = new Runnable() {
             @Override
             public void run() {
-                if (!initied) {
-                    return;
-                }
-
-                long current = System.currentTimeMillis();
-                if (!eglContext.equals(egl10.eglGetCurrentContext()) || !eglSurface.equals(egl10.eglGetCurrentSurface(EGL10.EGL_DRAW))) {
-                    if (!egl10.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
-                        if (BuildVars.LOGS_ENABLED) {
-                            FileLog.e("eglMakeCurrent failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
-                        }
+                try {
+                    if (!initied) {
                         return;
                     }
-                }
-                int deltaDrawMs = (int) Math.min(current - lastDrawFrame, 16);
-                float time = (current - currentDate) / 1000.0f;
-                Intro.setPage(currentViewPagerPage);
-                Intro.setDate(time);
-                Intro.onDrawFrame(deltaDrawMs);
-                egl10.eglSwapBuffers(eglDisplay, eglSurface);
-                lastDrawFrame = current;
 
-                if (maxRefreshRate == 0) {
-                    WindowManager wm = (WindowManager) ApplicationLoader.applicationContext.getSystemService(Context.WINDOW_SERVICE);
-                    Display display = wm.getDefaultDisplay();
-                    float[] rates = display.getSupportedRefreshRates();
-                    float maxRate = 0;
-                    for (float rate : rates) {
-                        if (rate > maxRate) {
-                            maxRate = rate;
+                    long current = System.currentTimeMillis();
+                    if (!eglContext.equals(egl10.eglGetCurrentContext()) || !eglSurface.equals(egl10.eglGetCurrentSurface(EGL10.EGL_DRAW))) {
+                        if (!egl10.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
+                            if (BuildVars.LOGS_ENABLED) {
+                                FileLog.e("eglMakeCurrent failed " + GLUtils.getEGLErrorString(egl10.eglGetError()));
+                            }
+                            return;
                         }
                     }
-                    maxRefreshRate = maxRate;
-                }
+                    int deltaDrawMs = (int) Math.min(current - lastDrawFrame, 16);
+                    float time = (current - currentDate) / 1000.0f;
+                    Intro.setPage(currentViewPagerPage);
+                    Intro.setDate(time);
+                    Intro.onDrawFrame(deltaDrawMs);
+                    egl10.eglSwapBuffers(eglDisplay, eglSurface);
+                    lastDrawFrame = current;
 
-                long drawMs = System.currentTimeMillis() - current;
-                postRunnable(drawRunnable, Math.max((long) (1000 / maxRefreshRate) - drawMs, 0));
+                    if (maxRefreshRate == 0) {
+                        WindowManager wm = (WindowManager) ApplicationLoader.applicationContext.getSystemService(Context.WINDOW_SERVICE);
+                        Display display = wm.getDefaultDisplay();
+                        float[] rates = display.getSupportedRefreshRates();
+                        float maxRate = 0;
+                        for (float rate : rates) {
+                            if (rate > maxRate) {
+                                maxRate = rate;
+                            }
+                        }
+                        maxRefreshRate = maxRate;
+                    }
+
+                    long drawMs = System.currentTimeMillis() - current;
+                    postRunnable(drawRunnable, Math.max((long) (1000 / maxRefreshRate) - drawMs, 0));
+                } catch (Throwable t) {
+                    FileLog.e(t);
+                }
             }
         };
 
@@ -887,18 +898,23 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         }
 
         private void loadTexture(GenericProvider<Void, Bitmap> bitmapProvider, int index, boolean rebind) {
-            if (rebind) {
-                GLES20.glDeleteTextures(1, textures, index);
-                GLES20.glGenTextures(1, textures, index);
+            try {
+                if (rebind) {
+                    GLES20.glDeleteTextures(1, textures, index);
+                    GLES20.glGenTextures(1, textures, index);
+                }
+                Bitmap bm = bitmapProvider.provide(null);
+                if (bm == null) return;
+                GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[index]);
+                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
+                GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bm, 0);
+                bm.recycle();
+            } catch (Throwable t) {
+                FileLog.e(t);
             }
-            Bitmap bm = bitmapProvider.provide(null);
-            GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[index]);
-            GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-            GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-            GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-            GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
-            GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bm, 0);
-            bm.recycle();
         }
 
         private void loadTexture(int resId, int index) {
@@ -906,31 +922,37 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         }
 
         private void loadTexture(int resId, int index, int tintColor, boolean rebind) {
-            Drawable drawable = getParentActivity().getResources().getDrawable(resId);
-            if (drawable instanceof BitmapDrawable) {
-                if (rebind) {
-                    GLES20.glDeleteTextures(1, textures, index);
-                    GLES20.glGenTextures(1, textures, index);
-                }
+            try {
+                Context ctx = getParentActivity() != null ? getParentActivity() : ApplicationLoader.applicationContext;
+                if (ctx == null) return;
+                Drawable drawable = ctx.getResources().getDrawable(resId);
+                if (drawable instanceof BitmapDrawable) {
+                    if (rebind) {
+                        GLES20.glDeleteTextures(1, textures, index);
+                        GLES20.glGenTextures(1, textures, index);
+                    }
 
-                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[index]);
-                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
+                    Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                    GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[index]);
+                    GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+                    GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+                    GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+                    GLES20.glTexParameteri(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
 
-                if (tintColor != 0) {
-                    Bitmap tempBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(tempBitmap);
-                    Paint tempPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-                    tempPaint.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
-                    canvas.drawBitmap(bitmap, 0, 0, tempPaint);
-                    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, tempBitmap, 0);
-                    tempBitmap.recycle();
-                } else {
-                    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+                    if (tintColor != 0) {
+                        Bitmap tempBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                        Canvas canvas = new Canvas(tempBitmap);
+                        Paint tempPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+                        tempPaint.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
+                        canvas.drawBitmap(bitmap, 0, 0, tempPaint);
+                        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, tempBitmap, 0);
+                        tempBitmap.recycle();
+                    } else {
+                        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+                    }
                 }
+            } catch (Throwable t) {
+                FileLog.e(t);
             }
         }
 
@@ -950,8 +972,12 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
         @Override
         public void run() {
-            initied = initGL();
-            super.run();
+            try {
+                initied = initGL();
+                super.run();
+            } catch (Throwable t) {
+                FileLog.e(t);
+            }
         }
     }
 

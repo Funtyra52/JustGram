@@ -1116,6 +1116,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         if (LoginActivity.loadCurrentState(false, currentAccount).getInt("currentViewNum", 0) != 0) {
             return new LoginActivity();
         }
+        long introCrashed = MessagesController.getGlobalMainSettings().getLong("intro_crashed_time", 0);
+        if (introCrashed != 0 && Math.abs(System.currentTimeMillis() - introCrashed) < 15000) {
+            return new LoginActivity();
+        }
         return new IntroActivity();
     }
 

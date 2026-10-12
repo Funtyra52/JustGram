@@ -428,8 +428,8 @@ class TelegramSettingsHelper(
         items.add(
             SettingsActivity.SettingCell.Factory.of(
                 1390,
-                0xFFE54C7F.toInt(), 0xFFA33156.toInt(),
-                if (CGResourcesHelper.isAnyOfBraIconsEnabled()) R.drawable.cg_settings_bra else R.drawable.cg_settings,
+                0xFF00C0FF.toInt(), 0xFF0072FF.toInt(),
+                R.drawable.msg_settings_solar,
                 getString(R.string.CGP_AdvancedSettings)
             )
         )
@@ -439,7 +439,7 @@ class TelegramSettingsHelper(
                 1391,
                 0xFF00C0FF.toInt(), 0xFF0072FF.toInt(),
                 R.drawable.justgram_badge,
-                "Настройки JustGram",
+                "JustGram Mod",
                 "Призрак, плагины, бейджи и поддержка",
                 true
             )

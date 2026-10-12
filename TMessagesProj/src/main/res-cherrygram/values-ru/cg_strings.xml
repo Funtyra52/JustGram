@@ -179,9 +179,9 @@
     <!--Cherrygram screens-->
 
     <!--Cherrygram Preferences-->
-    <string name="CGP_AdvancedSettings">Настройки Cherrygram</string>
+    <string name="CGP_AdvancedSettings">Настройки JustGram</string>
     <string name="CGP_About_Desc">Экспериментальная модификация официального приложения Telegram. Нажмите здесь, чтобы получить информацию о всех функциях приложения.</string>
-    <string name="CGP_Header_About">О Cherrygram</string>
+    <string name="CGP_Header_About">О JustGram</string>
     <string name="CGP_Header_About_Desc">Обновления, исходный код и другое</string>
     <string name="CGP_Links">Ссылки</string>
     <string name="CGP_ToChannel">Новости и обновления</string>

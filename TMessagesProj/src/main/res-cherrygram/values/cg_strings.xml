@@ -180,9 +180,9 @@
     <!--Cherrygram screens-->
 
     <!--Cherrygram Preferences-->
-    <string name="CGP_AdvancedSettings">Cherrygram Preferences</string>
+    <string name="CGP_AdvancedSettings">JustGram Preferences</string>
     <string name="CGP_About_Desc">An experimental Telegram app modification. Tap here to read the list of features.</string>
-    <string name="CGP_Header_About">About Cherrygram</string>
+    <string name="CGP_Header_About">About JustGram</string>
     <string name="CGP_Header_About_Desc">Updates, source code and more</string>
     <string name="CGP_Links">Links</string>
     <string name="CGP_ToChannel">News &amp; Updates</string>
