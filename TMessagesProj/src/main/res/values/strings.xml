@@ -2,7 +2,6 @@
 <resources>
     <string name="AppName">JustGram</string>
     <string name="AppNameBeta">JustGram Beta</string>
-    <string name="CG_AppName">JustGram</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
     <string name="LanguageNameInEnglish">English</string>
