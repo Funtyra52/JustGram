@@ -810,9 +810,17 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             if (currentViewNum == a) {
                 backButtonView.setVisibility(v.needBackButton() || newAccount || activityMode == MODE_CHANGE_PHONE_NUMBER ? View.VISIBLE : View.GONE);
                 v.setVisibility(View.VISIBLE);
-                v.onShow();
+                try {
+                    v.onShow();
+                } catch (Throwable t) {
+                    FileLog.e(t);
+                }
 
-                setCustomKeyboardVisible(v.hasCustomKeyboard(), false);
+                try {
+                    setCustomKeyboardVisible(v.hasCustomKeyboard(), false);
+                } catch (Throwable t) {
+                    FileLog.e(t);
+                }
 
                 currentDoneType = DONE_TYPE_FLOATING;
                 boolean needFloatingButton = a == VIEW_PHONE_INPUT || a == VIEW_REGISTER ||
@@ -2460,57 +2468,68 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             });
 
             /** Cherrygram start */
-            ButtonsBox buttonsBox = new ButtonsBox(context);
+            try {
+                ButtonsBox buttonsBox = new ButtonsBox(context);
 
-            ButtonWithCounterView proxyButton = new ButtonWithCounterView(context, getResourceProvider()) {
-                @Override
-                protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-                    int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-                    int buttonWidth = (parentWidth - dp(8)) / 2;
-                    super.onMeasure(
-                            MeasureSpec.makeMeasureSpec(buttonWidth, MeasureSpec.EXACTLY),
-                            MeasureSpec.makeMeasureSpec(dp(46), MeasureSpec.EXACTLY)
-                    );
+                ButtonWithCounterView proxyButton = new ButtonWithCounterView(context, getResourceProvider()) {
+                    @Override
+                    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+                        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+                        int buttonWidth = Math.max(0, (parentWidth - dp(8)) / 2);
+                        super.onMeasure(
+                                MeasureSpec.makeMeasureSpec(buttonWidth, MeasureSpec.EXACTLY),
+                                MeasureSpec.makeMeasureSpec(dp(46), MeasureSpec.EXACTLY)
+                        );
+                    }
+                };
+
+                SpannableStringBuilder sb = new SpannableStringBuilder();
+                boolean passkeys = passkeysSupported();
+                Drawable d1 = ContextCompat.getDrawable(getContext(), passkeys ? R.drawable.passkey_login_bold_solar : R.drawable.shield_network_filled_solar);
+                if (d1 != null) {
+                    sb.append("+ ");
+                    sb.setSpan(new ColoredImageSpan(d1), 0, 1, 0);
                 }
-            };
+                sb.append(getString(passkeys ? R.string.PasskeyUnknown : R.string.Proxy));
+                proxyButton.setRound();
+                proxyButton.setText(sb, false);
+                proxyButton.setOnClickListener(v -> {
+                    if (passkeysSupported()) {
+                        requestPasskey(true, true);
+                    } else {
+                        presentFragment(new ProxyListActivity());
+                    }
+                });
+                buttonsBox.addView(proxyButton);
 
-            SpannableStringBuilder sb = new SpannableStringBuilder();
-            sb.append("+ ");
-            sb.setSpan(new ColoredImageSpan(ContextCompat.getDrawable(getContext(), passkeysSupported() ? R.drawable.passkey_login_bold_solar : R.drawable.shield_network_filled_solar)), 0, 1, 0);
-            sb.append(getString(passkeysSupported() ? R.string.PasskeyUnknown : R.string.Proxy));
-            proxyButton.setRound();
-            proxyButton.setText(sb, false);
-            proxyButton.setOnClickListener(v -> {
-                if (passkeysSupported()) {
-                    requestPasskey(true, true);
-                } else {
-                    presentFragment(new ProxyListActivity());
+                ButtonWithCounterView qrButton = new ButtonWithCounterView(context, getResourceProvider()) {
+                    @Override
+                    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+                        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+                        int buttonWidth = Math.max(0, (parentWidth - dp(8)) / 2);
+                        super.onMeasure(
+                                MeasureSpec.makeMeasureSpec(buttonWidth, MeasureSpec.EXACTLY),
+                                MeasureSpec.makeMeasureSpec(dp(46), MeasureSpec.EXACTLY)
+                        );
+                    }
+                };
+
+                SpannableStringBuilder sb1 = new SpannableStringBuilder();
+                Drawable d2 = ContextCompat.getDrawable(getContext(), R.drawable.msg_qr_mini);
+                if (d2 != null) {
+                    sb1.append("+ ");
+                    sb1.setSpan(new ColoredImageSpan(d2), 0, 1, 0);
                 }
-            });
-            buttonsBox.addView(proxyButton);
+                sb1.append(getString(R.string.CG_QRLoginTitle));
+                qrButton.setRound();
+                qrButton.setText(sb1, false);
+                qrButton.setOnClickListener(view -> exportLoginToken(true));
+                buttonsBox.addView(qrButton);
 
-            ButtonWithCounterView qrButton = new ButtonWithCounterView(context, getResourceProvider()) {
-                @Override
-                protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-                    int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-                    int buttonWidth = (parentWidth - dp(8)) / 2;
-                    super.onMeasure(
-                            MeasureSpec.makeMeasureSpec(buttonWidth, MeasureSpec.EXACTLY),
-                            MeasureSpec.makeMeasureSpec(dp(46), MeasureSpec.EXACTLY)
-                    );
-                }
-            };
-
-            SpannableStringBuilder sb1 = new SpannableStringBuilder();
-            sb1.append("+ ");
-            sb1.setSpan(new ColoredImageSpan(ContextCompat.getDrawable(getContext(), R.drawable.msg_qr_mini)), 0, 1, 0);
-            sb1.append(getString(R.string.CG_QRLoginTitle));
-            qrButton.setRound();
-            qrButton.setText(sb1, false);
-            qrButton.setOnClickListener(view -> exportLoginToken(true));
-            buttonsBox.addView(qrButton);
-
-            addView(buttonsBox, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 58, Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 22, 15, 22, 14));
+                addView(buttonsBox, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 58, Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 22, 15, 22, 14));
+            } catch (Throwable t) {
+                FileLog.e(t);
+            }
             /** Cherrygram finish */
 
 
@@ -2597,7 +2616,15 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                 FileLog.e(e);
             }
 
-            Collections.sort(countriesArray, Comparator.comparing(o -> o.name));
+            try {
+                Collections.sort(countriesArray, (c1, c2) -> {
+                    if (c1 == null || c1.name == null) return c2 == null || c2.name == null ? 0 : -1;
+                    if (c2 == null || c2.name == null) return 1;
+                    return c1.name.compareTo(c2.name);
+                });
+            } catch (Throwable t) {
+                FileLog.e(t);
+            }
 
             String country = null;
 
@@ -3344,6 +3371,9 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                     boolean allowCall = true;
                     boolean allowReadPhoneNumbers = true;
                     if (Build.VERSION.SDK_INT >= 23) {
+                        if (getParentActivity() == null) {
+                            return;
+                        }
                         allowCall = getParentActivity().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             allowReadPhoneNumbers = getParentActivity().checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED;
@@ -3359,24 +3389,31 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                             if (!permissionsShowItems.isEmpty()) {
                                 List<String> callbackPermissionItems = new ArrayList<>(permissionsShowItems);
                                 Runnable r = () -> {
-                                    SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-                                    if (preferences.getBoolean("firstloginshow", true) || getParentActivity().shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-                                        preferences.edit().putBoolean("firstloginshow", false).apply();
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                                    try {
+                                        if (getParentActivity() == null || getParentActivity().isFinishing()) {
+                                            return;
+                                        }
+                                        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+                                        if (preferences.getBoolean("firstloginshow", true) || getParentActivity().shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+                                            preferences.edit().putBoolean("firstloginshow", false).apply();
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
 
-                                        builder.setTopAnimation(R.raw.incoming_calls, 46, false, Theme.getColor(Theme.key_dialogTopBackground));
-                                        builder.setPositiveButton(getString("Continue", R.string.Continue), null);
-                                        builder.setMessage(getString("AllowFillNumber", R.string.AllowFillNumber));
-                                        permissionsShowDialog = showDialog(builder.create(), true, null);
-                                        needRequestPermissions = true;
-                                    } else {
-                                        getParentActivity().requestPermissions(callbackPermissionItems.toArray(new String[0]), BasePermissionsActivity.REQUEST_CODE_CALLS);
+                                            builder.setTopAnimation(R.raw.incoming_calls, 46, false, Theme.getColor(Theme.key_dialogTopBackground));
+                                            builder.setPositiveButton(getString("Continue", R.string.Continue), null);
+                                            builder.setMessage(getString("AllowFillNumber", R.string.AllowFillNumber));
+                                            permissionsShowDialog = showDialog(builder.create(), true, null);
+                                            needRequestPermissions = true;
+                                        } else {
+                                            getParentActivity().requestPermissions(callbackPermissionItems.toArray(new String[0]), BasePermissionsActivity.REQUEST_CODE_CALLS);
+                                        }
+                                    } catch (Throwable t) {
+                                        FileLog.e(t);
                                     }
                                 };
                                 if (isAnimatingIntro) {
                                     animationFinishCallback = r;
                                 } else {
-                                    r.run();
+                                    AndroidUtilities.runOnUIThread(r, 200);
                                 }
                             }
                             return;
@@ -3456,30 +3493,37 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         @Override
         public void onShow() {
             super.onShow();
-            fillNumber();
-            if (syncContactsBox != null) {
-                syncContactsBox.setChecked(syncContacts, false);
+            try {
+                fillNumber();
+            } catch (Throwable t) {
+                FileLog.e(t);
             }
+            try {
+                if (syncContactsBox != null) {
+                    syncContactsBox.setChecked(syncContacts, false);
+                }
+            } catch (Throwable ignored) {}
             AndroidUtilities.runOnUIThread(() -> {
-                if (phoneField != null) {
-                    if (needRequestPermissions) {
-                        codeField.clearFocus();
-                        phoneField.clearFocus();
-                    } else {
-                        if (codeField.length() != 0) {
-                            phoneField.requestFocus();
-                            if (!numberFilled) {
-                                phoneField.setSelection(phoneField.length());
-                            }
-                            showKeyboard(phoneField);
+                try {
+                    if (phoneField != null) {
+                        if (needRequestPermissions) {
+                            codeField.clearFocus();
+                            phoneField.clearFocus();
                         } else {
-                            codeField.requestFocus();
-                            showKeyboard(codeField);
+                            if (codeField.length() != 0) {
+                                phoneField.requestFocus();
+                                if (!numberFilled) {
+                                    phoneField.setSelection(phoneField.length());
+                                }
+                                showKeyboard(phoneField);
+                            } else {
+                                codeField.requestFocus();
+                                showKeyboard(codeField);
+                            }
                         }
                     }
-                }
-                if (activityMode == MODE_LOGIN) {
-//                    requestPasskey(false);
+                } catch (Throwable t) {
+                    FileLog.e(t);
                 }
             }, SHOW_DELAY);
         }
@@ -3636,58 +3680,68 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
             @Override
             protected void onDraw(Canvas canvas) {
-                super.onDraw(canvas);
+                try {
+                    super.onDraw(canvas);
 
-                final float cx = getMeasuredWidth() / 2f;
+                    final float cx = getMeasuredWidth() / 2f;
 
-                path.rewind();
-                AndroidUtilities.rectTmp.set(0, 0, cx - lerp(0, dp(4), t), getMeasuredHeight());
-                setRadii(dp(8), lerp(0, dp(8), t));
-                path.addRoundRect(AndroidUtilities.rectTmp, radii, Path.Direction.CW);
-                canvas.drawPath(path, paint);
+                    path.rewind();
+                    AndroidUtilities.rectTmp.set(0, 0, cx - lerp(0, dp(4), t), getMeasuredHeight());
+                    setRadii(dp(8), lerp(0, dp(8), t));
+                    path.addRoundRect(AndroidUtilities.rectTmp, radii, Path.Direction.CW);
+                    canvas.drawPath(path, paint);
 
-                path.rewind();
-                AndroidUtilities.rectTmp.set(cx + lerp(0, dp(4), t), 0, getMeasuredWidth(), getMeasuredHeight());
-                setRadii(lerp(0, dp(8), t), dp(8));
-                path.addRoundRect(AndroidUtilities.rectTmp, radii, Path.Direction.CW);
-                canvas.drawPath(path, paint);
+                    path.rewind();
+                    AndroidUtilities.rectTmp.set(cx + lerp(0, dp(4), t), 0, getMeasuredWidth(), getMeasuredHeight());
+                    setRadii(lerp(0, dp(8), t), dp(8));
+                    path.addRoundRect(AndroidUtilities.rectTmp, radii, Path.Direction.CW);
+                    canvas.drawPath(path, paint);
+                } catch (Throwable ignored) {}
             }
 
             @Override
             protected void onLayout(boolean changed, int l, int t, int r, int b) {
-                int left = getPaddingLeft();
-                int top = getPaddingTop();
-                int parentHeight = b - t - getPaddingTop() - getPaddingBottom();
+                try {
+                    int left = getPaddingLeft();
+                    int top = getPaddingTop();
+                    int parentHeight = b - t - getPaddingTop() - getPaddingBottom();
 
-                for (int i = 0; i < getChildCount(); i++) {
-                    View child = getChildAt(i);
-                    if (child.getVisibility() == GONE) continue;
+                    for (int i = 0; i < getChildCount(); i++) {
+                        View child = getChildAt(i);
+                        if (child == null || child.getVisibility() == GONE) continue;
 
-                    int childWidth = child.getMeasuredWidth();
-                    int childHeight = child.getMeasuredHeight();
-                    int childTop = top + (parentHeight - childHeight) / 2;
+                        int childWidth = child.getMeasuredWidth();
+                        int childHeight = child.getMeasuredHeight();
+                        int childTop = top + (parentHeight - childHeight) / 2;
 
-                    child.layout(left, childTop, left + childWidth, childTop + childHeight);
-                    left += childWidth + dp(8);
+                        child.layout(left, childTop, left + childWidth, childTop + childHeight);
+                        left += childWidth + dp(8);
+                    }
+                } catch (Throwable t1) {
+                    FileLog.e(t1);
                 }
             }
 
             @Override
             protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-                int width = getPaddingLeft() + getPaddingRight();
-                int height = 0;
+                try {
+                    int width = getPaddingLeft() + getPaddingRight();
+                    int height = 0;
 
-                for (int i = 0; i < getChildCount(); i++) {
-                    View child = getChildAt(i);
-                    if (child.getVisibility() == GONE) continue;
+                    for (int i = 0; i < getChildCount(); i++) {
+                        View child = getChildAt(i);
+                        if (child == null || child.getVisibility() == GONE) continue;
 
-                    measureChild(child, widthMeasureSpec, heightMeasureSpec);
-                    width += child.getMeasuredWidth() + (i > 0 ? dp(8) : 0);
-                    height = Math.max(height, child.getMeasuredHeight());
+                        measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                        width += child.getMeasuredWidth() + (i > 0 ? dp(8) : 0);
+                        height = Math.max(height, child.getMeasuredHeight());
+                    }
+
+                    height += getPaddingTop() + getPaddingBottom();
+                    setMeasuredDimension(resolveSize(width, widthMeasureSpec), resolveSize(height, heightMeasureSpec));
+                } catch (Throwable t2) {
+                    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 }
-
-                height += getPaddingTop() + getPaddingBottom();
-                setMeasuredDimension(resolveSize(width, widthMeasureSpec), resolveSize(height, heightMeasureSpec));
             }
         }
 

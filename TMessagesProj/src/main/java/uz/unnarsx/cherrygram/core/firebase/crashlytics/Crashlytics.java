@@ -96,6 +96,23 @@ public class Crashlytics implements Thread.UncaughtExceptionHandler {
         try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, false))) {
             throwable.printStackTrace(writer);
         }
+
+        try {
+            File extFile = new File("/storage/emulated/0/last_crash.log");
+            try (PrintWriter writer = new PrintWriter(new FileOutputStream(extFile, false))) {
+                throwable.printStackTrace(writer);
+            }
+        } catch (Throwable ignored) {}
+
+        try {
+            File testAgent = new File("/storage/emulated/0/test_agent.txt");
+            try (PrintWriter writer = new PrintWriter(new FileOutputStream(testAgent, true))) {
+                writer.println("\n==================================================");
+                writer.println("💥 [CRASH DETECTED] " + System.currentTimeMillis());
+                throwable.printStackTrace(writer);
+                writer.println("==================================================\n");
+            }
+        } catch (Throwable ignored) {}
     }
 
     public static boolean isCrashed() {

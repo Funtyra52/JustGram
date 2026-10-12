@@ -87,7 +87,9 @@ public class ColoredImageSpan extends ReplacementSpan {
 
     public void setSize(int size) {
         this.size = size;
-        drawable.setBounds(0, 0, size, size);
+        if (drawable != null) {
+            drawable.setBounds(0, 0, size, size);
+        }
     }
 
     public void setTranslateX(float tx) {
@@ -128,12 +130,13 @@ public class ColoredImageSpan extends ReplacementSpan {
         }
         if (sizeWidth != 0)
             return (int) (Math.abs(scaleX) * sizeWidth);
-        return (int) (Math.abs(scaleX) * Math.abs(spaceScaleX) * (size != 0 ? size : drawable.getIntrinsicWidth()));
+        int intrinsicWidth = drawable != null ? drawable.getIntrinsicWidth() : 0;
+        return (int) (Math.abs(scaleX) * Math.abs(spaceScaleX) * (size != 0 ? size : intrinsicWidth));
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
-        if (!draw) return;
+        if (!draw || drawable == null) return;
 
         boolean drawableColorIsPaintColor = false;
         int color;
