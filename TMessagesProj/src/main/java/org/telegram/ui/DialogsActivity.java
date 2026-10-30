@@ -4590,7 +4590,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    org.justgram.plugins.PluginUIHookManager.INSTANCE.setFastScrolling(newState == RecyclerView.SCROLL_STATE_SETTLING);
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                         wasManualScroll = true;
                         scrollingManually = true;

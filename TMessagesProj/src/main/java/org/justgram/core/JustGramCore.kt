@@ -2,7 +2,6 @@ package org.justgram.core
 
 import android.content.Context
 import org.justgram.badges.JustGramBadgesManager
-import org.justgram.plugins.JustGramPluginManager
 
 object JustGramCore {
 
@@ -14,6 +13,5 @@ object JustGramCore {
         initialized = true
 
         JustGramBadgesManager.init(context)
-        JustGramPluginManager.init(context)
     }
 }

@@ -215,8 +215,3 @@
 -keep class org.justgram.badges.** { *; }
 -keepclassmembers class org.justgram.badges.** { *; }
 
-# JustGram Plugin Engine & Reflection
--keep class org.justgram.plugins.** { *; }
--keepclassmembers class org.justgram.plugins.** { *; }
--keep interface org.justgram.plugins.IPlugin { *; }
--keep @interface org.justgram.plugins.** { *; }

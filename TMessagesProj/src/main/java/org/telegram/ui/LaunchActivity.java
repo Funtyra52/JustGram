@@ -7152,7 +7152,6 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         ApplicationLoader.mainInterfacePaused = false;
         MessagesController.getInstance(currentAccount).sortDialogs(null);
         showLanguageAlert(false);
-        org.justgram.plugins.JustGramPluginManager.INSTANCE.checkSafeModeDialog(this);
         Utilities.stageQueue.postRunnable(() -> {
             ApplicationLoader.mainInterfacePausedStageQueue = false;
             ApplicationLoader.mainInterfacePausedStageQueueTime = System.currentTimeMillis();

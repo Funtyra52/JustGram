@@ -5,7 +5,6 @@ import android.view.View;
 
 import org.justgram.badges.JustGramBadgesManager;
 import org.justgram.ghost.JustGramGhostPreferencesEntry;
-import org.justgram.plugins.JustGramPluginsActivity;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
@@ -24,7 +23,6 @@ import uz.unnarsx.cherrygram.preferences.BaseCGPreferencesEntry;
 public class JustGramPreferencesActivity extends BaseCGPreferencesEntry {
 
     private final int ghostModeRow = 1;
-    private final int pluginsRow = 2;
     private final int badgesInfoRow = 3;
     private final int reloadSupportersRow = 4;
     private final int donateRow = 5;
@@ -56,16 +54,6 @@ public class JustGramPreferencesActivity extends BaseCGPreferencesEntry {
                 )
         );
 
-        items.add(
-                SettingsActivity.SettingCell.Factory.of(
-                        pluginsRow,
-                        IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom,
-                        R.drawable.formatting_code,
-                        "Плагины",
-                        "Extera Plugin Engine и безопасный режим",
-                        true
-                )
-        );
 
         items.add(UItem.asShadow(null));
 
@@ -138,8 +126,6 @@ public class JustGramPreferencesActivity extends BaseCGPreferencesEntry {
     protected void onClick(UItem item, View view, int position, float x, float y) {
         if (item.id == ghostModeRow) {
             presentFragment(new JustGramGhostPreferencesEntry());
-        } else if (item.id == pluginsRow) {
-            presentFragment(new JustGramPluginsActivity());
         } else if (item.id == badgesInfoRow) {
             showBadgesHelpDialog();
         } else if (item.id == reloadSupportersRow) {
